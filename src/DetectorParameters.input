@@ -1,0 +1,153 @@
+// default parameter values
+//
+WorldSize = 2.*m;
+
+
+
+SideDetectorRadius = 50.*mm/2;
+SideDetectorDist   = 0*mm;
+// SideDetectorThick  = 5.*mm/2;
+SideDetectorThick  = 5.0*mm/2;
+
+
+SideDeadlayerFrontThick = 0.0001*mm/2;
+
+
+SideCanisterInnerRadius1 = 75.*mm/2;
+SideCanisterOuterRadius1 = 95.*mm/2;
+//SideCanisterDist   =  - SideDetectorThick / 2; 
+SideCanisterThick1  = (100+75)*mm/2.;
+
+
+SideCanisterInnerRadius = 34.*mm/2;
+SideCanisterOuterRadius = 75.*mm/2;
+SideCanisterDist   =   50.* mm; 
+SideCanisterThick  = 10.*mm/2;
+
+// Be Window
+
+SideInnerWindowRadius = 152.4*mm/2;
+SideInnerWindowDist   = 418.*mm;
+SideInnerWindowThick  = 0.08*mm/2;
+
+SideOuterWindowRadius = 152.4*mm/2;
+SideOuterWindowDist  = 455.163*mm;
+SideOuterWindowThick  = 0.250*mm/2;
+
+// EBIT
+EbitTubeMinR     = 0.*mm;
+EbitTubeMaxR     = 250.*mm;
+EbitTubeLength   = 450.*mm/2;
+EbitTubeStartPhi = 0*deg;
+EbitTubeSweepPhi = 360*deg;
+
+
+ElectrodeMidMinR     = 7.0*mm;
+ElectrodeMidMaxR     = 24.*mm;
+ElectrodeMidLength   = 58.*mm/2;
+ElectrodeMidStartPhi = 13*deg;
+ElectrodeMidSweepPhi = 24*deg;
+
+
+ElectrodeEndMinR     = 7.0*mm;
+ElectrodeEndMaxR     = 24.*mm;
+ElectrodeEndLength   = 11.*mm/2;
+ElectrodeStartPhi    = 0*deg;
+ElectrodeSweepPhi    = 360*deg;
+
+CutThickness         = 0.5*mm;
+
+ElectrodeGuardMinR   = 2.5*mm;
+ElectrodeGuardMaxR   = 24.*mm;
+ElectrodeGuardLength = 72.5*mm/2;
+
+ElectrodeConeMinR1  = 2.5*mm;
+ElectrodeConeMaxR1  = 24.*mm;
+ElectrodeConeMinR2  = 3.5*mm;
+ElectrodeConeMaxR2  = 24.*mm;
+ElectrodeConeLength = 11.25*mm/2;
+
+HelmholtzCoilMinR     = 115.0*mm;
+HelmholtzCoilMaxR     = 216.0*mm;
+HelmholtzCoilLength   = 55.0*mm/2;
+HelmholtzCoilDistance = 112.0*mm/2;
+HelmholtzCoilStartPhi = 0*deg;
+HelmholtzCoilSweepPhi = 360*deg;
+
+InsulatorInnerMinR = 13.*mm;
+InsulatorOuterMinR = 10.*mm;
+InsulatorMaxR      = 20.*mm;
+InsulatorLength    = 4.*mm/2;
+InsulatorStartPhi  = 0*deg;
+InsulatorSweepPhi  = 360*deg;
+
+MacorRingMinR        = 21.*mm;
+MacorRingMidR        = 24.*mm;
+MacorRingMaxR        = 28.*mm;
+MacorRingInnerLength = 4.*mm/2;
+MacorRingOuterLength = 15.*mm/2;
+MacorRingStartPhi    = 0*deg;
+MacorRingSweepPhi    = 360*deg;
+
+HousingMinR     = 41.5*mm;
+HousingMaxR     = 44.5*mm;
+HousingLength   = 217.*mm/2;
+HousingStartPhi = 0*deg;
+HousingSweepPhi = 360*deg;
+
+HousingCutLength3    = 55.*mm/2;
+HousingCutStartPhi3  = 77.*deg;
+HousingCutSweepPhi3  = 26.*deg;
+HousingCutLength4    = 35.*mm/2;
+HousingCutStartPhi4  = 37.*deg;
+HousingCutSweepPhi4  = 16.*deg;
+
+
+CHInnerRadius = 55.*mm;
+CHMidRadius   = 108.5*mm;
+CHMidLength   = 57.*mm/2;
+CHCoilRadius  = 56.25*mm;
+CHCoilLength  = 55.*mm/2;
+CHEndRadius   = 105.*mm;
+CHEndLength   = 34.*mm/2;
+CHCutRadius3  = 50*mm/2;
+CHCutRadius4  = 30*mm/2;
+CHStartPhi    = 0*deg;
+CHSweepPhi    = 360*deg;
+
+
+//ShieldingCopperOuterRadius = 66.*mm/2;
+//ShieldingCopperInnerRadius = 61.*mm/2;
+//ShieldingCopperDist   = SideDetectorDist + SideDetectorThick*2+ SideDeadlayerFrontThick * 2;
+//ShieldingCopperDist   = 0.*mm;
+//ShieldingCopperThick  = 50.*mm/2;
+/*
+ShieldingLeadOuterRadius = 64.*mm/2;
+ShieldingLeadInnerRadius = 63.*mm/2;
+//ShieldingLeadDist   = SideDetectorDist + SideDetectorThick*2+ SideDeadlayerFrontThick * 2;
+ShieldingLeadDist  = 0.*mm;
+ShieldingLeadThick  = 50.*mm/2;
+
+*/
+
+
+
+// default names
+WorldName = "World";
+WindowName = "Window";
+SideDetectorName = "SideDetector";
+SideDeadlayerName = "SideDeadLayer";
+//ShieldingCopperName = "ShieldingCopper";
+//ShieldingLeadName = "ShieldingLead";
+//ShieldingCopperName = "ShieldingCopper";
+// EBIT 
+EbitTubeName = "EBITtube";
+ElectrodeName = "Electrode";
+CutName = "Cuts";
+InsulatorName = "Insulator";
+InsulatorName = "Insulator";
+MacorRingName = "MacorRing";
+HousingName = "Housing";
+CoilHolderName = "CoilHolder";
+CanisterName = "BGOBack";
+CanisterName1 = "BGOSide";
