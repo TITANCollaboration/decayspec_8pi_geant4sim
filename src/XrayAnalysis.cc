@@ -2,6 +2,10 @@
 #include "XrayAnalysisMessenger.hh"
 #include "SiliconDetector.hh"
 #include "G4ThreeVector.hh"
+
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+
 #include <climits>
 #include <iomanip>
 #include <iostream>
@@ -13,7 +17,7 @@ XrayAnalysis::XrayAnalysis()
 {
   siliDetector = new SiliconDetector();
   messenger = new XrayAnalysisMessenger(this);
-  
+
   outdirectory = "";
   filename = "xray";
   filetype = ".dat";
@@ -29,8 +33,8 @@ XrayAnalysis::~XrayAnalysis()
   histo->save();
 }
 
-void XrayAnalysis::CreateHit(G4int detno, G4int trackID, G4int parentID, G4double edep,  
-			     G4String volume, G4String particle, G4String process, 
+void XrayAnalysis::CreateHit(G4int detno, G4int trackID, G4int parentID, G4double edep,
+			     G4String volume, G4String particle, G4String process,
 			     G4ThreeVector pos, G4int particlePDGenc)
 {
   PartialHit aHit;
@@ -63,11 +67,11 @@ void XrayAnalysis::ProcessEvent(int evtNb)
     z[i]=(currHits[i].pos[2]);
     hv[i]=(currHits[i].volume);
     pdg[i]=(currHits[i].particleID);
-  }    
+  }
 
   std::vector<G4String> volnames;
   for (G4int i=0; i<(G4int)currHits.size(); i++) {
-    if (std::count(volnames.begin(), volnames.end(), currHits[i].volume)==0) { 
+    if (std::count(volnames.begin(), volnames.end(), currHits[i].volume)==0) {
       volnames.push_back(currHits[i].volume);
     }
   }
@@ -204,11 +208,11 @@ FullHit XrayAnalysis::MakeFullHit(std::vector<PartialHit> group)
 void XrayAnalysis::PrintFile()
 {
   G4cout << "Now writing to files..." << G4endl;
-  
+
   G4int nhits = totalHits.size();
   G4String outname = outdirectory + filename + filetype;
   std::ofstream File(outname, std::ios::out);
-  
+
   for (G4int i=0; i<nhits; i++) {
     std::stringstream ss;
     ss << std::setw( 8) << (totalHits[i].edep / keV) << "\t"
@@ -218,7 +222,7 @@ void XrayAnalysis::PrintFile()
        << std::setw( 8) << totalHits[i].particle << "\t"
        << std::setw( 8) << totalHits[i].process << "\t"
 //
-       << std::setw( 8) << totalHits[i].pos;  
+       << std::setw( 8) << totalHits[i].pos;
 
     G4String rowstr = ss.str() + "\n";
     File << rowstr;
@@ -228,7 +232,7 @@ void XrayAnalysis::PrintFile()
 void XrayAnalysis::PrintEdepOnly(std::map<G4int, std::vector<G4double> > listDetnoEdep)
 {
   G4cout << "Now writing to files..." << G4endl;
-  
+
   std::map<G4int, std::vector<G4double> >::iterator it;
   for (it = listDetnoEdep.begin(); it != listDetnoEdep.end(); it++) {
     G4int detno = it->first;

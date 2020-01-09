@@ -71,7 +71,7 @@ void HistoManager::book()
  //
  //G4String fileName = "rebit.root";
   char fntemplate[] = "_rebitXXXXXX";
-  rFileName = G4String(mktemp(fntemplate))+".root";
+  rFileName = G4String(mkstemp(fntemplate))+".root"; // jonr changed to mkstemp..
   std::cout << "root file name >> " << rFileName << " << " << std::endl;
  //G4cout << "in book" << G4endl;
   rootFile = new TFile(rFileName.c_str(),"RECREATE");

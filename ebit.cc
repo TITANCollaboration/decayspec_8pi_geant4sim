@@ -10,6 +10,9 @@
 #include "XrayAnalysis.hh"
 #include "HistoManager.hh"
 
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
 #endif
@@ -23,7 +26,7 @@ int main(int argc, char** argv)
   //choose the Random engine
   CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
   CLHEP::HepRandom::setTheSeed(42); // time(0));
-  
+
   // create run manager
   //
   G4RunManager* runManager = new G4RunManager;
@@ -34,7 +37,7 @@ int main(int argc, char** argv)
   PhysicsList* physics = new PhysicsList;
   runManager->SetUserInitialization(detector);
   runManager->SetUserInitialization(physics);
-  
+
   // set user custom classes
   XrayAnalysis* xrayAnal = new XrayAnalysis();
   HistoManager*  histo = new HistoManager();
@@ -51,35 +54,35 @@ int main(int argc, char** argv)
   runManager->SetUserAction(runAction);
   runManager->SetUserAction(eventAction);
   runManager->SetUserAction(steppingAction);
-  
+
   // Initialize G4 kernel
   //
   runManager->Initialize();
-  
+
   // get the pointer to the User Interface manager
   //
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  
+
   if (argc!=1) { // batch mode
-    
+
     G4String command = "/control/execute ";
     G4String fileName = argv[1];
     UI->ApplyCommand(command+fileName);
-    
+
   } else { // define visualization and UI terminal for interactive mode
-    
+
 #ifdef G4VIS_USE
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
     UI->ApplyCommand("/control/execute vis.mac");
 #endif
-    
+
 #ifdef G4UI_USE
     G4UIExecutive * ui = new G4UIExecutive(argc, argv);
     ui->SessionStart();
     delete ui;
 #endif
-    
+
 #ifdef G4VIS_USE
     delete visManager;
 #endif
@@ -90,6 +93,6 @@ int main(int argc, char** argv)
   //
   if (runManager) delete runManager;
   if (xrayAnal) delete xrayAnal;
-  
+
   return 0;
 }

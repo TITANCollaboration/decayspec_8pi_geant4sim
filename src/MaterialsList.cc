@@ -4,6 +4,9 @@
 #include "G4Material.hh"
 #include "G4NistManager.hh"
 
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+
 MaterialsList* MaterialsList::theMaterialsList = NULL;
 
 MaterialsList::MaterialsList()
@@ -20,11 +23,11 @@ void MaterialsList::DefineMaterials()
   G4double a, z; // atomic mass and number
   G4double fractionmass, density;
   G4int n, ncomponents, natoms;
-  
+
   // Nist manager and elements
   //
   G4NistManager* Nman = G4NistManager::Instance();
-  
+
   Be = Nman->FindOrBuildElement(n=4);
   B  = Nman->FindOrBuildElement(n=5);
   C  = Nman->FindOrBuildElement(n=6);
@@ -46,8 +49,8 @@ void MaterialsList::DefineMaterials()
   // ADDING Bi
   Bi = Nman->FindOrBuildElement(n=83);
   Air = Nman->FindOrBuildMaterial("G4_AIR");
-  Galactic = Nman->FindOrBuildMaterial("G4_Galactic"); 
-  
+  Galactic = Nman->FindOrBuildMaterial("G4_Galactic");
+
   // materials
 
   Carbon = new G4Material("Carbon", density=2.267*g/cm3, ncomponents=1);
@@ -68,7 +71,7 @@ void MaterialsList::DefineMaterials()
   Copper    ->AddElement(Cu, fractionmass=1.);
   // ADDING LEAD PROPERTIES
   Lead = new G4Material("Lead", density=11.34*g/cm3, ncomponents=1);
-  Lead      ->AddElement(Pb, fractionmass=1.);  
+  Lead      ->AddElement(Pb, fractionmass=1.);
   Al2O3 = new G4Material("Al2O3", density= 3.90*g/cm3, ncomponents=2);
   Al2O3 ->AddElement(Al, natoms=2);
   Al2O3 ->AddElement(O , natoms=3);
@@ -93,7 +96,7 @@ void MaterialsList::DefineMaterials()
   SiO2  = new G4Material("SiO2", density= 2.65*g/cm3, ncomponents=2);
   SiO2  ->AddElement(Si, natoms=1);
   SiO2  ->AddElement(O , natoms=2);
-  
+
   Macor = new G4Material("Macor", density= 2.52*g/cm3, ncomponents=6);
   Macor ->AddMaterial(SiO2 , fractionmass=0.46);
   Macor ->AddMaterial(MgO  , fractionmass=0.17);
@@ -101,7 +104,7 @@ void MaterialsList::DefineMaterials()
   Macor ->AddMaterial(K2O  , fractionmass=0.10);
   Macor ->AddMaterial(B2O3 , fractionmass=0.07);
   Macor ->AddElement (F    , fractionmass=0.04);
-  
+
   SSteel = new G4Material("Stainless Steel", density=7.79876*g/cm3, ncomponents=2);
   SSteel ->AddElement(Fe, fractionmass=0.89);
   SSteel ->AddElement(Cr, fractionmass=0.11);
@@ -143,6 +146,6 @@ G4Material* MaterialsList::GetMaterial(G4String material)
   else {
     G4cout << "Cannot find material in list." << G4endl;
   }
-  
+
   return vMat;
 }

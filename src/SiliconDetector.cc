@@ -1,5 +1,7 @@
 #include "SiliconDetector.hh"
 #include "Randomize.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 SiliconDetector::SiliconDetector()
 {

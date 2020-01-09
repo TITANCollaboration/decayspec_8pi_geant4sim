@@ -18,8 +18,7 @@ if(WITH_GEANT4_UIVIS)
 else()
   find_package(Geant4 REQUIRED)
 endif()
-
-find_package(ROOT REQUIRED)
+find_package(ROOT CONFIG REQUIRED)
 include(${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------------
@@ -41,7 +40,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(ebit ebit.cc ${sources} ${headers})
-target_link_libraries(ebit ${Geant4_LIBRARIES})
+target_link_libraries(ebit ${ROOT_LIBRARIES} ${Geant4_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we

@@ -2,6 +2,9 @@
 #include "PrimaryGeneratorAction.hh"
 #include "ParticleGunMessenger.hh"
 
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
@@ -28,9 +31,9 @@ PrimaryGeneratorGun::PrimaryGeneratorGun(G4ParticleGun* gun)
   sumIntensity = 0.;
 
   fp= fopen("testfile.txt","w");
-  
+
   ReadFromFile();
-  
+
   messenger = new ParticleGunMessenger(this);
 }
 
@@ -47,9 +50,9 @@ void PrimaryGeneratorGun::ReadFromFile()
   if (!gunEnergy.empty())    gunEnergy.clear();
   maxIntensity = 0.;
   sumIntensity = 0.;
-  
+
   G4cout << "Reading from file..." << G4endl;
-  
+
   // determine file name to read
   std::string atn;
   std::stringstream ss;
@@ -57,15 +60,15 @@ void PrimaryGeneratorGun::ReadFromFile()
   atn = ss.str();
   G4String fileType = ".ion";
   G4String fileName = elementName + atn + spinState + fileType;
-  
+
   std::ifstream inFile;
   inFile.open(fileName);
-  
+
   if(!inFile) {
     G4cout << "Failed to open file " << fileName << G4endl;
     return;
   }
-  
+
   // HEADER FORMAT: number of datasets \n lines per dataset
   G4int nSets;
   inFile >> nSets;
@@ -84,11 +87,11 @@ void PrimaryGeneratorGun::ReadFromFile()
     setModeI.push_back(mode);
     nLines += line;
   }
-  
+
   // FORMAT: PARTICLE \t ENERGY \t INTENSITY
   G4String particle;
   G4double intensity, energy;
-  
+
   // read the file
   while (!inFile.eof()) {
     inFile >> particle >> energy >> intensity;
@@ -97,12 +100,12 @@ void PrimaryGeneratorGun::ReadFromFile()
     gunIntensity.push_back(intensity);
     gunEnergy.push_back(energy);
   }
-  
+
   // temporary fix of duplicate last item
   gunParticle.pop_back();
   gunIntensity.pop_back();
   gunEnergy.pop_back();
-  
+
   // error checking
   if (gunParticle.size() != gunIntensity.size() ||
       gunParticle.size() != gunEnergy.size() ||
@@ -114,7 +117,7 @@ void PrimaryGeneratorGun::ReadFromFile()
     gunEnergy.clear();
     return;
   }
-  
+
   // normalize for each mode
   G4int linecount = 0;
   for (G4int i=0; i<nSets; i++) {
@@ -129,13 +132,13 @@ void PrimaryGeneratorGun::ReadFromFile()
   }
   setLines.clear();
   setModeI.clear();
-  
+
   // normalize to maximum intensity
   for (G4int i=0; i<(G4int)gunIntensity.size(); i++) {
     sumIntensity += gunIntensity[i];
     if (maxIntensity < gunIntensity[i]) maxIntensity = gunIntensity[i];
   }
-  
+
   G4cout << "Read file " << fileName << " successfully!" << G4endl;
   inFile.close();
 }
@@ -194,13 +197,13 @@ void PrimaryGeneratorGun::GeneratePrimaries(G4Event* anEvent)
 							    sinTheta*sin(phi_1),
 							    uz));//cosTheta));
 
-      
+
       if (xDir != 0. || yDir != 0. || zDir != 0.) {
 	// specified direction
 	G4double ux = xDir; G4double uy = yDir; uz = zDir;
         particleGun->SetParticleMomentumDirection(G4ThreeVector(ux,uy,uz));
       }
-      
+
       // shoot a decay event
       particleGun->GeneratePrimaryVertex(anEvent);
       break;
