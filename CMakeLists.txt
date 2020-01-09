@@ -57,7 +57,7 @@ set(EBIT_SCRIPTS
   vis.mac
   )
 
-foreach(_script ${EXAMPLEB1_SCRIPTS})
+foreach(_script ${EBIT_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
