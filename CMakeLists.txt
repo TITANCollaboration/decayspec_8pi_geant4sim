@@ -13,11 +13,12 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 
 
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
-if(WITH_GEANT4_UIVIS)
+#if(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)
-else()
-  find_package(Geant4 REQUIRED)
-endif()
+#else()
+#  find_package(Geant4 REQUIRED)
+#endif()
+
 find_package(ROOT CONFIG REQUIRED)
 include(${ROOT_USE_FILE})
 
@@ -47,22 +48,22 @@ target_link_libraries(ebit ${ROOT_LIBRARIES} ${Geant4_LIBRARIES})
 # build B1. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-#set(EXAMPLEB1_SCRIPTS
+set(EBIT_SCRIPTS
 #  exampleB1.in
 #  exampleB1.out
-#  init_vis.mac
+  init_vis.mac
 #  run1.mac
 #  run2.mac
-#  vis.mac
-#  )
+  vis.mac
+  )
 
-#foreach(_script ${EXAMPLEB1_SCRIPTS})
-#  configure_file(
-#    ${PROJECT_SOURCE_DIR}/${_script}
-#    ${PROJECT_BINARY_DIR}/${_script}
-#    COPYONLY
-#    )
-#endforeach()
+foreach(_script ${EXAMPLEB1_SCRIPTS})
+  configure_file(
+    ${PROJECT_SOURCE_DIR}/${_script}
+    ${PROJECT_BINARY_DIR}/${_script}
+    COPYONLY
+    )
+endforeach()
 
 #----------------------------------------------------------------------------
 # For internal Geant4 use - but has no effect if you build this
