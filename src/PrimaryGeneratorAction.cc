@@ -10,14 +10,14 @@
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
   gpsGun = new G4GeneralParticleSource();
-  
+
   G4int n_particle = 1;
   particleGun = new G4ParticleGun(n_particle);
-  
+
   actionSource = new PrimaryGeneratorSource(gpsGun);
   actionGun = new PrimaryGeneratorGun(particleGun);
-  
-  selectedAction = 1;
+
+  selectedAction = 2;
   messenger = new PrimaryGeneratorMessenger(this);
 }
 
@@ -35,6 +35,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   switch(selectedAction)
     {
     case 1:
+      G4cout  << "! We get a source event!\n";
       actionSource->GeneratePrimaries(anEvent);
       break;
     case 2:

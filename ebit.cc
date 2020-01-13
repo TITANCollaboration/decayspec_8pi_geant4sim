@@ -4,6 +4,8 @@
 #include "DetectorConstruction.hh"
 #include "PhysicsList.hh"
 #include "PrimaryGeneratorAction.hh"
+#include "PrimaryGeneratorGun.hh"
+
 #include "RunAction.hh"
 #include "EventAction.hh"
 #include "SteppingAction.hh"
@@ -49,7 +51,7 @@ int main(int argc, char** argv)
   //
   DetectorConstruction* detector = new DetectorConstruction;
   PhysicsList* physics = new PhysicsList;
-  physics->SetVerboseLevel(1);
+  physics->SetVerboseLevel(2);
   runManager->SetUserInitialization(detector);
   runManager->SetUserInitialization(physics);
 
