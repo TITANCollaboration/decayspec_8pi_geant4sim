@@ -15,6 +15,7 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
+
 //#ifdef G4MULTITHREADED
 //#include "G4MTRunManager.hh"
 //#else
@@ -27,6 +28,17 @@
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 
+/*void MyActionInitialization::Build() : G4VUserActionInitialization
+{
+  PrimaryGeneratorAction* genAction = new PrimaryGeneratorAction();
+  RunAction* runAction = new RunAction(xrayAnal);
+  EventAction* eventAction = new EventAction(xrayAnal);
+  SteppingAction* steppingAction = new SteppingAction(detector, xrayAnal);
+  SetUserAction(genAction);
+  SetUserAction(runAction);
+  SetUserAction(eventAction);
+  SetUserAction(steppingAction);
+}*/
 
 
 int main(int argc, char** argv)
@@ -43,8 +55,14 @@ int main(int argc, char** argv)
   // create run manager
   //
 
+//#ifdef G4MULTITHREADED
+//  G4MTRunManager* runManager = new G4MTRunManager;
+ // runManager->SetNumberOfThreads(2);
+//#else
   G4RunManager* runManager = new G4RunManager;
 //#endif
+
+
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   // set mandatory initialization classes

@@ -82,7 +82,7 @@ void HistoManager::book()
            << G4endl;
     return;
   }
-  /*
+
   histo[1] = new TH1D("1", "Edep in absorber", 100, 0., 800*CLHEP::MeV);
   if (!histo[1]) G4cout << "\n can't create histo 1" << G4endl;
   histo[2] = new TH1D("2", "Edep in gap", 100, 0., 100*CLHEP::MeV);
@@ -91,7 +91,7 @@ void HistoManager::book()
   if (!histo[3]) G4cout << "\n can't create histo 3" << G4endl;
   histo[4] = new TH1D("4", "trackL in gap", 100, 0., 50*CLHEP::cm);
   if (!histo[4]) G4cout << "\n can't create histo 4" << G4endl;
-  */
+
 
 // create 1 ntuple in subdirectory "tuples"
 //

@@ -199,8 +199,8 @@ FullHit XrayAnalysis::MakeFullHit(std::vector<PartialHit> group)
   aHit.particle = group[rootPos].particle;
   aHit.process = group[rootPos].process;
   aHit.pos = group[rootPos].pos;
-   G4cout << "Full hit made with detno: " << aHit.detno << "; edep: " << aHit.edep
-  	 << "; volume: " << aHit.volume << "; particle: " << aHit.particle << "; process: " << aHit.process << G4endl;
+ //  G4cout << "Full hit made with detno: " << aHit.detno << "; edep: " << aHit.edep
+ // 	 << "; volume: " << aHit.volume << "; particle: " << aHit.particle << "; process: " << aHit.process << G4endl;
   return aHit;
 }
 

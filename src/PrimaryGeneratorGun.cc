@@ -16,7 +16,7 @@
 #include <fstream>
 #include <sstream>
 
-PrimaryGeneratorGun::PrimaryGeneratorGun(G4ParticleGun* gun) : G4VUserPrimaryGeneratorAction(), particleGun(gun)
+PrimaryGeneratorGun::PrimaryGeneratorGun(G4ParticleGun* gun) : particleGun(gun)
 
 {
     elementName = "Ba";
@@ -154,14 +154,14 @@ void PrimaryGeneratorGun::GeneratePrimaries(G4Event* anEvent)
     G4double cumSum1 = 0.;
     G4double cumSum2 = 0.;
     G4double randomNum = G4UniformRand() * sumIntensity;
-    G4cout << "!!!!! Got to Generate Primaries !!!!" << G4endl;
+   // G4cout << "!!!!! Got to Generate Primaries !!!!" << G4endl;
     for (G4int i = 0; i < n_decaytypes; i++) {
         // test for intensity first
         cumSum2 += gunIntensity[i];
         if (randomNum >= cumSum1 && randomNum <= cumSum2) {
             // success!
             // set energy
-            G4cout << "Got here to set particle..\n";
+         //   G4cout << "Got here to set particle..\n";
             particle = gunParticle[i];
             energy = gunEnergy[i] * keV;
             //jonr : Not sure why this is being handled this way, I don't think you can use isotopes here..
