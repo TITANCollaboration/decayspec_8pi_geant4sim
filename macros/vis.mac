@@ -1,0 +1,55 @@
+/run/initialize
+#
+# use OpenGL
+#
+/vis/open OGL 600x600-0+0
+/vis/viewer/set/autoRefresh false
+/control/verbose 1
+/run/verbose 1
+/event/verbose 1
+/tracking/verbose 1
+/vis/verbose errors
+#
+# draw the scene
+#
+/vis/drawVolume
+#
+# set viewing options
+#
+/vis/viewer/set/viewpointThetaPhi 40. 60.
+/vis/viewer/panTo 0. 0.
+/vis/viewer/zoom 1.
+#/vis/viewer/set/style wireframe
+#/vis/scene/add/axes 0 0 0 1 m
+#
+# smooth trajectories and add hits at end of event
+#
+/vis/scene/add/trajectories smooth
+#/vis/scene/add/hits
+#
+# filter particles
+#
+#/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/particleFilter-0/add gamma
+#
+# invert the above two lines
+#
+#/vis/filtering/trajectories/particleFilter-0/invert true
+#
+# set particle colors
+#
+#/vis/modeling/trajectories/create/drawByParticleID
+#/vis/modeling/trajectories/drawByParticleID-0/set e- red
+#/vis/modeling/trajectories/drawByParticleID-0/set e+ blue
+#/vis/modeling/trajectories/drawByParticleID-0/set nu_e black
+#/vis/modeling/trajectories/drawByParticleID-0/set anti_nu_e black
+#/vis/modeling/trajectories/drawByParticleID-0/set geantino white
+#/vis/modeling/trajectories/drawByParticleID-0/set gamma green
+#/vis/modeling/trajectories/drawByParticleID-0/set alpha yellow
+#/vis/modeling/trajectories/drawByParticleID-0/set GenericIon grey
+#
+# superimpose events
+#
+#/vis/scene/endOfEventAction accumulate
+/vis/viewer/set/autoRefresh true
+/vis/verbose warnings

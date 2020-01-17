@@ -4,12 +4,11 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAnInteger.hh"
 
-PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* Gun)
- : Action(Gun)
+PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* Gun) : Action(Gun)
 {
   Dir = new G4UIdirectory("/pga/");
   Dir->SetGuidance("this primary generator action");
-    
+
   selectActionCmd = new G4UIcmdWithAnInteger("/pga/selectGunAction", this);
   selectActionCmd->SetGuidance("Select primary generator action");
   selectActionCmd->SetGuidance(" id = 1 : General particle source");
@@ -26,7 +25,7 @@ PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
 }
 
 void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
-{ 
+{
   if (command == selectActionCmd)
     { Action->SelectAction(selectActionCmd->GetNewIntValue(newValue)); }
 }

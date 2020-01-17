@@ -1,0 +1,3 @@
+/gps/energy {E} keV
+/ebit/xa/filename {E}keV
+/run/beamOn 10000

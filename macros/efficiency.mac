@@ -1,0 +1,9 @@
+/pga/selectGunAction 1
+/gps/particle gamma
+/gps/position 400 0 0 mm
+/gps/direction 1 0 0
+#
+#/control/loop shoot.mac E 0 2 .01
+/control/loop shoot.mac E 2 50 .1
+#/control/loop shoot.mac E 50 200 1
+#/control/loop shoot.mac E 200 1000 10

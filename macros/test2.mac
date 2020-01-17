@@ -1,0 +1,9 @@
+/pga/selectGunAction 2
+/particleGun/setAtomicNumber 116
+/particleGun/setElementName In
+/particleGun/setSpinState _5+
+#/particleGun/setPosition 400 0 0 mm
+#/particleGun/setDirection 1 0 0
+/particleGun/updateGun
+/ebit/xa/filename In116_5+_si_iso
+/run/beamOn 10000000

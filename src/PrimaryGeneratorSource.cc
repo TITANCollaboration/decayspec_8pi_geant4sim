@@ -2,8 +2,7 @@
 #include "G4GeneralParticleSource.hh"
 #include "G4Event.hh"
 
-PrimaryGeneratorSource::PrimaryGeneratorSource(G4GeneralParticleSource* gun)
-  : gpsGun(gun)
+PrimaryGeneratorSource::PrimaryGeneratorSource(G4GeneralParticleSource* gun) : gpsGun(gun)
 {}
 
 PrimaryGeneratorSource::~PrimaryGeneratorSource()

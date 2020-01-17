@@ -1,0 +1,12 @@
+/pga/selectGunAction 2
+/particleGun/setAtomicNumber 133
+/particleGun/setElementName Ba
+#/particleGun/setSpinState 
+/particleGun/setCloudRadius 3 mm
+/particleGun/toggleGauss
+/particleGun/setPosition 0 0 0 mm
+/particleGun/setMinAngle 75 deg
+/particleGun/setMaxAngle 105 deg
+/particleGun/updateGun
+/ebit/xa/filename Ba133_sphere_3r0z_gauss
+/run/beamOn 10000000

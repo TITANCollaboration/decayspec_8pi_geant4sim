@@ -35,7 +35,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   switch(selectedAction)
     {
     case 1:
-      G4cout  << "! We get a source event!\n";
+      //G4cout  << "! We get a source event!\n";
       actionSource->GeneratePrimaries(anEvent);
       break;
     case 2:

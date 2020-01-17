@@ -1,0 +1,10 @@
+/pga/selectGunAction 2
+/particleGun/setAtomicNumber 133
+/particleGun/setElementName Ba
+/particleGun/setRadii 0 0 0 mm
+/particleGun/setPosition 0 0 0 mm
+/particleGun/setMinAngle 75 deg
+/particleGun/setMaxAngle 105 deg
+/particleGun/updateGun
+/ebit/xa/filename Ba133_point_0r0z
+/run/beamOn 10000000

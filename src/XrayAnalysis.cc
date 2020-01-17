@@ -198,7 +198,6 @@ FullHit XrayAnalysis::MakeFullHit(std::vector<PartialHit> group)
   aHit.volume = group[rootPos].volume;
   aHit.particle = group[rootPos].particle;
   aHit.process = group[rootPos].process;
-//
   aHit.pos = group[rootPos].pos;
    G4cout << "Full hit made with detno: " << aHit.detno << "; edep: " << aHit.edep
   	 << "; volume: " << aHit.volume << "; particle: " << aHit.particle << "; process: " << aHit.process << G4endl;
@@ -231,7 +230,7 @@ void XrayAnalysis::PrintFile()
 
 void XrayAnalysis::PrintEdepOnly(std::map<G4int, std::vector<G4double> > listDetnoEdep)
 {
-  G4cout << "Now writing to files..." << G4endl;
+  G4cout << "Now writing Edep to files..." << G4endl;
 
   std::map<G4int, std::vector<G4double> >::iterator it;
   for (it = listDetnoEdep.begin(); it != listDetnoEdep.end(); it++) {

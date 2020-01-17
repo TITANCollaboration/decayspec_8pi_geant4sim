@@ -1,0 +1,6 @@
+/pga/selectGunAction 1
+/gps/particle gamma
+/gps/direction 1 0 0
+/gps/energy 30 keV
+/ebit/xa/filename 30keV
+/run/beamOn 1000
