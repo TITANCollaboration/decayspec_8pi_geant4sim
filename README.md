@@ -22,7 +22,7 @@ version : 6.14.06
 
 CMAKE Agruments :
 
-```cmake -DCMAKE_INSTALL_PREFIX=/usr/local/root/root-6.14.06 -Dminuit2=ON -Dxml=ON -Dmathmore=ON
+```cmake -DCMAKE_INSTALL_PREFIX=/usr/local/root/root-6.14.06 -Dminuit2=ON -Dxml=ON -Dmathmore=ON```
 
 ###Vagrant VM
 
