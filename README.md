@@ -36,4 +36,6 @@ git clone https://github.com/TITANCollaboration/decayspec_8pi_geant4sim.git
 mkdir build
 cd build
 cmake ../decayspec_8pi_geant4sim
+make
+make install
 ```
