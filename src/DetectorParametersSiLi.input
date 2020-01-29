@@ -1,0 +1,35 @@
+SideDetectorRadius = 50.*mm/2;
+SideDetectorDist   = 0*mm;
+// SideDetectorThick  = 5.*mm/2;
+SideDetectorThick  = 5.0*mm/2;
+
+
+SideDeadlayerFrontThick = 0.0001*mm/2;
+
+
+SideCanisterInnerRadius1 = 75.*mm/2;
+SideCanisterOuterRadius1 = 95.*mm/2;
+//SideCanisterDist   =  - SideDetectorThick / 2; 
+SideCanisterThick1  = (100+75)*mm/2.;
+
+
+SideCanisterInnerRadius = 34.*mm/2;
+SideCanisterOuterRadius = 75.*mm/2;
+SideCanisterDist   =   50.* mm; 
+SideCanisterThick  = 10.*mm/2;
+
+// Be Window
+
+SideInnerWindowRadius = 152.4*mm/2;
+SideInnerWindowDist   = 418.*mm;
+SideInnerWindowThick  = 0.08*mm/2;
+
+SideOuterWindowRadius = 152.4*mm/2;
+SideOuterWindowDist  = 455.163*mm;
+SideOuterWindowThick  = 0.250*mm/2;
+
+SideDetectorName = "SideDetector";
+SideDeadlayerName = "SideDeadLayer";
+
+CanisterName = "BGOBack";
+CanisterName1 = "BGOSide";

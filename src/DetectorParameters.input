@@ -3,7 +3,7 @@
 WorldSize = 2.*m;
 
 
-
+/*
 SideDetectorRadius = 50.*mm/2;
 SideDetectorDist   = 0*mm;
 // SideDetectorThick  = 5.*mm/2;
@@ -23,7 +23,7 @@ SideCanisterInnerRadius = 34.*mm/2;
 SideCanisterOuterRadius = 75.*mm/2;
 SideCanisterDist   =   50.* mm; 
 SideCanisterThick  = 10.*mm/2;
-
+*/
 // Be Window
 
 SideInnerWindowRadius = 152.4*mm/2;
@@ -135,8 +135,8 @@ ShieldingLeadThick  = 50.*mm/2;
 // default names
 WorldName = "World";
 WindowName = "Window";
-SideDetectorName = "SideDetector";
-SideDeadlayerName = "SideDeadLayer";
+//SideDetectorName = "SideDetector";
+//SideDeadlayerName = "SideDeadLayer";
 //ShieldingCopperName = "ShieldingCopper";
 //ShieldingLeadName = "ShieldingLead";
 //ShieldingCopperName = "ShieldingCopper";
@@ -149,5 +149,5 @@ InsulatorName = "Insulator";
 MacorRingName = "MacorRing";
 HousingName = "Housing";
 CoilHolderName = "CoilHolder";
-CanisterName = "BGOBack";
-CanisterName1 = "BGOSide";
+//CanisterName = "BGOBack";
+//CanisterName1 = "BGOSide";

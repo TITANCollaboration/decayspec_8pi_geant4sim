@@ -44,9 +44,9 @@ DetectorMessenger::~DetectorMessenger()
 
 void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 { 
-  
+  /* JonR: Removed... I just don't care...
   if (command == SideDetectorMatCmd)
-    { Detector->SetSideDetectorMaterial(newValue); }
+  { Detector->SetSideDetectorMaterial(newValue); }*/
   
   if (command == UpdateCmd)
     { Detector->UpdateGeometry(); }

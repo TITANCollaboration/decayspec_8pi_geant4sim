@@ -21,22 +21,29 @@ public:
   G4VPhysicalVolume* Construct();
   G4VPhysicalVolume* ConstructAll();
   const G4VPhysicalVolume* GetWorld()          {return pvWorld;};
-  const G4VPhysicalVolume* GetSideDetector()   {return pvSideDetector;};
+  // const G4VPhysicalVolume* GetSideDetector()   {return pvSideDetector;};
   const G4VPhysicalVolume* GetElectrodeMid()   {return pvElectrodeMid;};
   const G4VPhysicalVolume* GetElectrodeEnd()   {return pvElectrodeEnd;};
   const G4VPhysicalVolume* GetElectrodeGuard() {return pvElectrodeGuard;};
   const G4VPhysicalVolume* GetElectrodeCone()  {return pvElectrodeCone;};
-  
+
+  // Lets add in the ability to add in the 8pi's
+  void AddDetectionSystem8pi(G4int ndet);
+  void AddDetectionSystem8piDetector(G4int ndet);
+
   void CleanGeometry();
   void UpdateGeometry();
-  void DefineMaterials();
+  
+  void DefineEbitMaterials();
   //void DestroyMaterials();
   void SetVisualization();
   void ConstructTrap();
   void ConstructSiLi();
   
   void SetWindowMaterial(G4String);
-  void SetSideDetectorMaterial(G4String);
+  // void SetSideDetectorMaterial(G4String);
+  void DefineSuppressedParameters();
+  void DefineMaterials();
  
 
 private:
@@ -48,6 +55,7 @@ private:
   DetectorMessenger* messenger;
   
   // World
+  G4LogicalVolume*   fLogicWorld;    //pointer to the logical World, this is for 8pi, should probably meld into lvWoorld at some point
   G4LogicalVolume* lvWorld;
   G4VPhysicalVolume* pvWorld;
   G4Material* WorldMater;
@@ -55,7 +63,7 @@ private:
   G4double WorldSize;
   
   G4LogicalVolume* lvSiLi;
-  G4VPhysicalVolume* pvSiLi;
+  /*  G4VPhysicalVolume* pvSiLi;*/
 
   G4LogicalVolume* lvSupportStruct;
   G4VPhysicalVolume* pvSupportStruct;
@@ -67,7 +75,7 @@ private:
   G4LogicalVolume* lvFloor;
   G4VPhysicalVolume* pvFloor;
   
-
+  /*
   // Detectors
   G4LogicalVolume* lvSideDetector;
   G4VPhysicalVolume* pvSideDetector;
@@ -76,7 +84,7 @@ private:
   G4double SideDetectorRadius;
   G4double SideDetectorDist;
   G4double SideDetectorThick;
-
+  */
   G4Material* BdiscMater;
   G4Material* Al2O3Mater;
   G4Material* SSteelMater;
@@ -85,7 +93,7 @@ private:
   G4Material* LeadMater;
 
 
-  G4LogicalVolume* lvbdisc;
+  /* G4LogicalVolume* lvbdisc;
   G4VPhysicalVolume* pvbdisc;
 
   // shields
@@ -93,16 +101,16 @@ private:
   G4VPhysicalVolume* pvcu8;
   G4LogicalVolume* lvpb8;
   G4VPhysicalVolume* pvpb8;
+  */
 
-
-
+  /*
   // Dead layers
   G4LogicalVolume* lvSideDeadlayer;
   G4VPhysicalVolume* pvSideDeadlayer;
   G4String SideDeadlayerName;
   G4double SideDeadlayerFrontThick;
-
-  //Canister
+  */
+  /* //Canister
   G4LogicalVolume* lvSideCanister;
   G4VPhysicalVolume* pvSideCanister;
   G4LogicalVolume* lvSideCanister1;
@@ -143,7 +151,7 @@ private:
 
   G4LogicalVolume* lv_siRing;
   G4VPhysicalVolume* pv_siRing;
-
+  */
   G4LogicalVolume* lv_baPl;
   G4VPhysicalVolume* pv_baPl;
   G4LogicalVolume* lv_endPl;

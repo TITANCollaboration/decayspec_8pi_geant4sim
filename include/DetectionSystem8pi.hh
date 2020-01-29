@@ -43,63 +43,63 @@
 class DetectionSystem8pi
 {
 public:
-    DetectionSystem8pi();
-    ~DetectionSystem8pi();
+  DetectionSystem8pi();
+  ~DetectionSystem8pi();
 
-    G4int Build() ;//G4SDManager* mySDman);
-    G4int BuildOneDetector();
-    G4int PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVector move, G4RotationMatrix* rotate, G4int detectorNumber);
-    //    G4double const GetDetectorLengthOfUnitsCM() {return this->canLengthZ;};
-
-    // Assembly volumes
-    G4AssemblyVolume* fAssembly;
-    G4AssemblyVolume* fAssemblyGe;
-    G4AssemblyVolume* fAssemblyInnerBGO;
-    G4AssemblyVolume* fAssemblyOuterLowerBGO;
-    G4AssemblyVolume* fAssemblyOuterUpperBGO;
-
-    G4double fCutClearance;
-
-    G4double fDetailViewEndAngle;
-    G4double fDistFromOrigin;
-    G4double fCrystalDistFromOrigin;
-    G4double fCrystalOuterRadius;
-    G4double fCrystalInnerRadius;
-    G4double fHoleStartingDepth;
-    G4double fCrystalLength;
-    G4double fDeadLayerThickness;
-    G4double fElectrodeRadius;
-    G4double fInnerCanThickness;
-    G4double fInnerCanExtendsPastCrystal;
-    G4double fInnerCanLidThickness;
-    G4double fInnerCanLidSeparation;
-
-    G4double fStructureMatCoolingRodRadius;
-    G4double fElectrodeMatCoolingRodRadius;
-    G4double fElectrodeMatCoolingRodLength;
-    G4double fElectrodeMatCoolingRodDistFromInnerLid;
-    G4double fCoolingRodCoverClearance;
-    G4double fOuterCanLength;
-    G4double fOuterCanDistFromInnerCan;
-    G4double fOuterCanThickness;
-    G4double fOuterCanExtendsPastCrystal;
-    G4double fOuterCanInnerRadius;
-    G4double fBerylliumDistFromCrystal;
-    G4double fBerylliumThickness;
-    G4double fBerylliumRadius;
-    G4double fInnerBGOAnnulusLength;
-    G4double fInnerBGOClearance;
-    G4double fInnerBGOInnerRadius;
-    G4double fInnerBGOOuterRadius;
-    G4double fOuterBGOBottomThickness;
-    G4double fOuterBGOTaperHeight;
-    G4double fOuterBGOTopOuterRadius;
-    G4double fOuterBGOTotalLength;
-    G4double fOuterBGOClearance;
-    G4double fOuterBGODisplacement;
-    G4double fLiquidN2Length;
-    G4double fLiquidN2Radius;
-
+  G4int Build();//G4SDManager* mySDman);
+  G4int BuildOneDetector();
+  G4int PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVector move, G4RotationMatrix* rotate, G4int detectorNumber);
+  //    G4double const GetDetectorLengthOfUnitsCM() {return this->canLengthZ;};
+  void DefineMaterials();
+  // Assembly volumes
+  G4AssemblyVolume* fAssembly;
+  G4AssemblyVolume* fAssemblyGe;
+  G4AssemblyVolume* fAssemblyInnerBGO;
+  G4AssemblyVolume* fAssemblyOuterLowerBGO;
+  G4AssemblyVolume* fAssemblyOuterUpperBGO;
+  
+  G4double fCutClearance;
+  
+  G4double fDetailViewEndAngle;
+  G4double fDistFromOrigin;
+  G4double fCrystalDistFromOrigin;
+  G4double fCrystalOuterRadius;
+  G4double fCrystalInnerRadius;
+  G4double fHoleStartingDepth;
+  G4double fCrystalLength;
+  G4double fDeadLayerThickness;
+  G4double fElectrodeRadius;
+  G4double fInnerCanThickness;
+  G4double fInnerCanExtendsPastCrystal;
+  G4double fInnerCanLidThickness;
+  G4double fInnerCanLidSeparation;
+  
+  G4double fStructureMatCoolingRodRadius;
+  G4double fElectrodeMatCoolingRodRadius;
+  G4double fElectrodeMatCoolingRodLength;
+  G4double fElectrodeMatCoolingRodDistFromInnerLid;
+  G4double fCoolingRodCoverClearance;
+  G4double fOuterCanLength;
+  G4double fOuterCanDistFromInnerCan;
+  G4double fOuterCanThickness;
+  G4double fOuterCanExtendsPastCrystal;
+  G4double fOuterCanInnerRadius;
+  G4double fBerylliumDistFromCrystal;
+  G4double fBerylliumThickness;
+  G4double fBerylliumRadius;
+  G4double fInnerBGOAnnulusLength;
+  G4double fInnerBGOClearance;
+  G4double fInnerBGOInnerRadius;
+  G4double fInnerBGOOuterRadius;
+  G4double fOuterBGOBottomThickness;
+  G4double fOuterBGOTaperHeight;
+  G4double fOuterBGOTopOuterRadius;
+  G4double fOuterBGOTotalLength;
+  G4double fOuterBGOClearance;
+  G4double fOuterBGODisplacement;
+  G4double fLiquidN2Length;
+  G4double fLiquidN2Radius;
+  
     G4double fHevimetalThickness;
     G4double fHevimetalFrontSideLength;
     G4double fHevimetalRearSideLength;
