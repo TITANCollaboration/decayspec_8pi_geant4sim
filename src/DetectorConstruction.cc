@@ -30,7 +30,8 @@
 #include "G4Colour.hh"
 
 #include "G4SystemOfUnits.hh"
-#include "DetectionSystemSiLi.hh"
+//#include "DetectionSystemSiLi.hh"
+#include "DetectionSystem8pi.hh"
 
 DetectorConstruction::DetectorConstruction()
 {
@@ -69,7 +70,7 @@ void DetectorConstruction::UpdateGeometry()
 void DetectorConstruction::DefineEbitMaterials()
 {
   // Use outside class to define materials
-
+  
   mlist = new MaterialsList();
   mlist->Construct();
   
@@ -91,12 +92,12 @@ void DetectorConstruction::DefineEbitMaterials()
   // CopperMater = mlist->GetMaterial("Copper");
   // LeadMater = mlist->GetMaterial("Lead");
   
-
+  
   // Be material
   WindowMater = mlist->GetMaterial("Beryllium");
   // EBIT
-  SSteelMater = mlist->GetMaterial("SSteel");
-
+  //SSteelMater = mlist->GetMaterial("SSteel");
+  
   EbitTubeMater = mlist->GetMaterial("Galactic");
   ElectrodeMater = mlist->GetMaterial("Copper");
   CutMater = mlist->GetMaterial("Galactic");
@@ -104,9 +105,7 @@ void DetectorConstruction::DefineEbitMaterials()
   InsulatorMater = mlist->GetMaterial("Al2O3");
   MacorRingMater = mlist->GetMaterial("Macor");
   HousingMater = mlist->GetMaterial("SSteel");
-  CoilHolderMater = mlist->GetMaterial("SSteel");
-  
-  
+  CoilHolderMater = CoilHolderMater; //mlist->GetMaterial("SSteel");
   
   delete mlist;
 }
@@ -120,14 +119,8 @@ void DetectorConstruction::SetWindowMaterial(G4String material)
   delete mlist;
 }
 */
-/*
-void DetectorConstruction::SetSideDetectorMaterial(G4String material)
-{
-  mlist = new MaterialsList(); mlist->Construct();
-  SideDetectorMater = mlist->GetMaterial(material);
-  delete mlist;
-}
-*/
+
+
 void DetectorConstruction::SetVisualization()
 {
   // Invisible volumes
@@ -455,19 +448,19 @@ void DetectorConstruction::ConstructTrap() {
     pvPort8 = new G4PVPlacement(trans_port8, lvPort8, "port8", lvWorld, 1, 0, checkOverlaps);
   }
 
-
+  /*
   if (ONFLOORTESTS) {
-    /* this assumes a base plate and a back(/end) plate.
-       the usual setup is:
-       the end plate (with the source)is 130mm in front of the crystal.
-       the rods are 330mm long.
-       the base plate is on the other end of the rods
-       a modified setup for the ba133 calib 4/2013 is:
-       the end plate is an additional 155 farther away from the crystal.
-       (detector pulled back a little)
-       a 3rd (and eventually nominal setup for the strong R600 Ba133)
-       two sets of rods instead of one, so distance 130+330 
-    */
+    // this assumes a base plate and a back(/end) plate.
+    //   the usual setup is:
+    //   the end plate (with the source)is 130mm in front of the crystal.
+    //   the rods are 330mm long.
+    //   the base plate is on the other end of the rods
+    //   a modified setup for the ba133 calib 4/2013 is:
+    //   the end plate is an additional 155 farther away from the crystal.
+    //   (detector pulled back a little)
+    //   a 3rd (and eventually nominal setup for the strong R600 Ba133)
+    //   two sets of rods instead of one, so distance 130+330 
+    //
     //perhaps a steel floor of sorts?
     G4Box* floor = new G4Box("floor", WorldSize, WorldSize, 0.5*cm/2);
     lvFloor = new G4LogicalVolume(floor, SSteelMater, "floor");
@@ -528,12 +521,12 @@ void DetectorConstruction::ConstructTrap() {
     //pvSupportStruct = new G4PVPlacement(0, G4ThreeVector(), 
     //					lvSupportStruct, "SupportStruct", lvSiLi, 1, 0, checkOverlaps);
 
-  }
+  } */
   // JonR: This is where we actually start defining detectors, may want to change how this is done to
   // allow a more modular approach
   
   //pvSiLi = new G4PVPlacement(0, G4ThreeVector(), lvSiLi, "SiLi", lvWorld, 1, 0, checkOverlaps);
-  for (int i=-1; i<6;i++){
+  /*  for (int i=-1; i<6;i++){
     int j = -i;
     phi = 45*deg * j;
     G4RotationMatrix rotWin;
@@ -544,23 +537,24 @@ void DetectorConstruction::ConstructTrap() {
     x1 = cos(phi)*r1;
     y1 = sin(phi)*r1;
     z1 = 0;
-    G4Transform3D transWin(rotWin, G4ThreeVector(x1,y1,z1));
+    G4Transform3D transWin(rotWin, G4ThreeVector(x1,y1,z1)); 
     
     // The following line places the actual SiLi detectors
-    //jonr: pvSiLi = new G4PVPlacement(transWin, lvSiLi, "SiLi", lvWorld, 1, i, checkOverlaps);
+    //pvSiLi = new G4PVPlacement(transWin, lvSiLi, "SiLi", lvWorld, 1, i, checkOverlaps);
 
     //jonr: The following were commented out before I got here.., will look into eventually.  I'm guessing the one
     // below is just for the Cu side fittings onto the detector's head
     //pvSideCanister = new G4PVPlacement(transWin, lvSideCanister, CanisterName, lvWorld, 0, i);
     // jonr: this one might be for just one detector?  There is no numbering on the 7th parameter so...
     //pvSiLi = new G4PVPlacement(0, G4ThreeVector(), lvSiLi, "SiLi", lvWorld, 1, 0, checkOverlaps);
-  }
-  
+    }*/
 }
 
 
 G4VPhysicalVolume* DetectorConstruction::ConstructAll()
 {
+  G4double x1, y1, z1, phi=0.;
+
   CleanGeometry();
   
   // world
@@ -570,7 +564,41 @@ G4VPhysicalVolume* DetectorConstruction::ConstructAll()
   pvWorld = new G4PVPlacement(0, G4ThreeVector(), lvWorld, WorldName, 0, 0, 0);
   
   //ConstructSiLi();
+  //ConstructTrap();
+  DetectionSystem8pi* my8pidet = new DetectionSystem8pi();
+  //DetectionSystemSiLi* mySiLiDet = new DetectionSystemSiLi();
+  //  G4LogicalVolume* mylvSiLi;
+  //mylvSiLi = mySiLiDet->Build();
+  my8pidet->Build();
+    //    my8pidet->PlaceDetector(logicWorld, pos8pi, rotate8pi, 0);
   ConstructTrap();
+  G4RotationMatrix* rotate8pi = new G4RotationMatrix(45*deg, 0, 0);
+    //G4ThreeVector pos8pi = G4ThreeVector(0, 0, 0);
+  G4double r1 = 459.805*mm;//SideCanisterDist + SideCanisterThick;    
+
+  for (int i=-1; i<6;i++){
+    int j = -i;
+    phi = 45*deg * j;
+    G4RotationMatrix rotWin;
+    rotate8pi->rotateX(90*deg);
+    rotate8pi->rotateY(0*deg);
+    rotate8pi->rotateZ(phi);
+    //    rotWin.rotateX(90*deg);
+    //rotWin.rotateY(0*deg);
+    //rotWin.rotateZ(phi);
+
+    x1 = cos(phi)*r1;
+    y1 = sin(phi)*r1;
+    z1 = 0;
+    printf("X1: %f, y1: %f, z1: %f, phi: %f\n", (x1, y1, z1, phi));
+    G4Transform3D transWin(rotWin, G4ThreeVector(x1,y1,z1)); 
+    my8pidet->PlaceDetector(lvWorld, G4ThreeVector(x1,y1,z1), rotate8pi, i);
+    //G4int DetectionSystem8pi::PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVector move, G4RotationMatrix* rotate, G4int detectorNumber) {
+    
+    //pvSiLi = new G4PVPlacement(transWin, lvSiLi, "SiLi", lvWorld, 1, i, checkOverlaps);
+    
+  }
+  
   SetVisualization();
   
   return pvWorld;

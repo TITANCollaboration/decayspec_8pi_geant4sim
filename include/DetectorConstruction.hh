@@ -48,6 +48,7 @@ public:
 
 private:
   G4int checkOverlaps;
+  G4VPhysicalVolume* pvSiLi;
 
   // Magnetic Field
   MagneticField* field;
@@ -62,7 +63,7 @@ private:
   G4String WorldName;
   G4double WorldSize;
   
-  G4LogicalVolume* lvSiLi;
+  //G4LogicalVolume* lvSiLi;
   /*  G4VPhysicalVolume* pvSiLi;*/
 
   G4LogicalVolume* lvSupportStruct;

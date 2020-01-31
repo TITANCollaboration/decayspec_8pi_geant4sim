@@ -24,43 +24,57 @@
 #include "MaterialsList.hh"
 
 #include "G4SystemOfUnits.hh" // new version geant4.10 requires units
+#include "DetectorConstruction.hh"
+
+DetectionSystemSiLi::DetectionSystemSiLi() {}
+
 
 
 void DetectionSystemSiLi::SetSideDetectorMaterial(G4String material)
 {
-  mlist = new MaterialsList(); mlist->Construct();
-  SideDetectorMater = mlist->GetMaterial(material);
-  delete mlist;
+  //  mlistSiLi = new MaterialsList();
+  //mlistSiLi->Construct();
+  //SideDetectorMater = mlistSiLi->GetMaterial(material);
+  //delete mlistSiLi;
 }
 
 /*----------------------------------------------------*/
 G4int DetectionSystemSiLi::DefineMaterials() {
-  WorldMater = mlist->GetMaterial("Galactic");
+    mlistSiLi = new MaterialsList();
+  //mlistSiLi->Construct();
+  
+  WorldMater = mlistSiLi->GetMaterial("Galactic");
+  //delete mlistSiLi;
   return 0;
 }
 
 /*----------------------------------------------------*/
   
 /*----------------------------------------------------*/
-G4int DetectionSystemSiLi::Build() {
+G4LogicalVolume* DetectionSystemSiLi::Build() {  // Formally ConstructSiLi
 /*----------------------------------------------------*/
+#include "DetectorParametersSiLi.input"
 
   // this ought to be a box that contains all elements of one detector
   G4double x1, y1, z1, phi;
   G4int placeBGO = 0;
   G4int placeCuPb = 1;
+
   DefineMaterials();
-  
+
   G4Box* boxSiLi = new G4Box("SiLi", 50*cm/2, 25*cm/2, 25*cm/2);
   lvSiLi = new G4LogicalVolume(boxSiLi, WorldMater, "SiLi");
   //pvSiLi = new G4PVPlacement(0, G4ThreeVector(), lvSiLi, WorldName, 0, 0, 0);
-
+ 
   //  G4EllipticalTube* svSideDetector = new G4EllipticalTube(SideDetectorName, SideDetectorRadius, SideDetectorRadius, SideDetectorThick);
+
   G4Tubs* svSideDetector = new G4Tubs(SideDetectorName,0,SideDetectorRadius, SideDetectorThick,0,360*deg);
+
   lvSideDetector = new G4LogicalVolume(svSideDetector, SideDetectorMater, SideDetectorName);
   phi = 90*deg * 0;
   G4RotationMatrix rotDet;
   rotDet.rotateY(270*deg); rotDet.rotateZ(phi);
+
   //G4double r1 = SideDetectorDist + SideDetectorThick;
   //x1 = r1;
   x1 = 0;
@@ -74,16 +88,18 @@ G4int DetectionSystemSiLi::Build() {
 
   G4Tubs* svSideDeadLayerFront = new G4Tubs("deadlayer",0,SideDetectorRadius, SideDeadlayerFrontThick ,0,360*deg);
   lvSideDeadlayer = new G4LogicalVolume(svSideDeadLayerFront, SideDetectorMater, SideDeadlayerName);
-  
+
   phi = 90*deg * 0;
   G4RotationMatrix rotDL;
   rotDL.rotateY(270*deg); rotDL.rotateZ(phi);
   x1 = -SideDetectorThick-SideDeadlayerFrontThick; //don't have it overlap
   y1 = 0;
   z1 = 0;
+
   G4Transform3D transDL(rotDL, G4ThreeVector(x1,y1,z1));
-  pvSideDeadlayer = new G4PVPlacement(transDL, lvSideDeadlayer, SideDeadlayerName, lvSiLi, 1, 0, checkOverlaps);
   
+  pvSideDeadlayer = new G4PVPlacement(transDL, lvSideDeadlayer, SideDeadlayerName, lvSiLi, 1, 0, checkOverlaps);
+
   // Canisters
   if (placeBGO) {
     G4Tubs* svSideCanister1 = new G4Tubs(CanisterName1, SideCanisterInnerRadius1,SideCanisterOuterRadius1, SideCanisterThick1,0.*deg,360.*deg);
@@ -261,6 +277,6 @@ G4int DetectionSystemSiLi::Build() {
     G4Transform3D trans_siRing(rotcspacer, G4ThreeVector(0,0,0));
     pv_siRing = new G4PVPlacement(trans_siRing, lv_siRing, "siRing", lvSiLi, 1, 0, checkOverlaps);
   }
-    
-  return 0;
+  return lvSiLi;
+  // return lvSiLi;
 }

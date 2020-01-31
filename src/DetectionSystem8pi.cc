@@ -25,6 +25,7 @@
 #include "G4SystemOfUnits.hh" // new version geant4.10 requires units
 
 //constructor suppressed
+//DetectionSystem8pi::DetectionSystem8pi() { }
 
 DetectionSystem8pi::~DetectionSystem8pi() {
     delete fGermaniumBlockLog;
@@ -59,6 +60,13 @@ DetectionSystem8pi::~DetectionSystem8pi() {
     delete fAuxMatLayerLog;
 }
 
+/*void DetectionSystem8pi::DefineMaterials() {
+    G4double z,a, density;
+    G4Element* Ge = new G4Element("Germanium","Ge", z=32., a=  72.59*g/mole);
+    new G4Material("Germanium"  , z=32., a= 72.61*g/mole, density= 5.323*g/cm3);
+    }*/
+
+
 G4int DetectionSystem8pi::Build() {
 
     // Build assembly volumes
@@ -67,6 +75,8 @@ G4int DetectionSystem8pi::Build() {
     fAssemblyInnerBGO = new G4AssemblyVolume();
     fAssemblyOuterLowerBGO = new G4AssemblyVolume();
     fAssemblyOuterUpperBGO = new G4AssemblyVolume();
+
+    DefineMaterials();
 
     AddGermanium();
 
@@ -99,29 +109,30 @@ G4int DetectionSystem8pi::Build() {
     AddCoolingRodCover();
     //add structureMat sheath around inner BGO annulus
 
-    AddStructureMatBGOSheath();
+    //   AddStructureMatBGOSheath();
     //add inner BGO annulus around cooling rod
 
-    AddInnerBGOAnnulus();
+    //AddInnerBGOAnnulus();
     //add outer BGO annulus
 
-    AddOuterBGOAnnulus();
+    //    AddOuterBGOAnnulus();
     //add liquid N2 cooling container
 
     AddLiquidN2Container();
     //add hevimetal collimator & core
 
-    AddHevimetalCollimator();
+    // jonr : I don't think we need the following items for the EBIT, they appear to just be a cover after the end of the detector
+    // AddHevimetalCollimator();
     //Add AuxMat plug in Hevimetal collimator
 
-    AddAuxMatPlug();
+    //AddAuxMatPlug();
     //Add thin auxMat layer
 
-    AddThinAuxMatLayer();
+    //  AddThinAuxMatLayer();
     //Add hevimetal and auxMat plug
 
     return 1;
-}//end ::Build 
+}//end ::Build
 
 G4int DetectionSystem8pi::PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVector move, G4RotationMatrix* rotate, G4int detectorNumber) {
     //G4int detectorCopyID = 0;
@@ -151,6 +162,8 @@ G4ThreeVector DetectionSystem8pi::GetDirectionXYZ(G4double theta, G4double phi) 
 //Add the germanium crystal
 G4int DetectionSystem8pi::AddGermanium() {
     //material
+   // G4Material *Germanium = new G4Material("Germanium", density = 5.323*g/cm3, ncomponents = 1);
+    //G4Material::AddMaterial("Germanium",5.323*g/cm3);
     G4Material* material = G4Material::GetMaterial("Germanium");
     if( !material ) {
         G4cout << " ----> Material " << "Germanium" << " not found, cannot build the detector shell! " << G4endl;

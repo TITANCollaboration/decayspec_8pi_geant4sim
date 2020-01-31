@@ -5,6 +5,7 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 
+
 #include "G4AssemblyVolume.hh"
 
 class MaterialsList;
@@ -14,7 +15,8 @@ class DetectionSystemSiLi
 public:
   DetectionSystemSiLi();
   ~DetectionSystemSiLi();
-  G4int Build();
+  G4LogicalVolume* Build();
+  
   G4int DefineMaterials();
   void SetSideDetectorMaterial(G4String material);
   const G4VPhysicalVolume* GetSideDetector()   {return pvSideDetector;};
@@ -22,7 +24,7 @@ public:
 private:
   G4Material* WorldMater;
 
-  MaterialsList* mlist;
+  MaterialsList* mlistSiLi;
   G4int checkOverlaps;
 
   
@@ -60,7 +62,7 @@ private:
   G4double SideCanisterThick1;
 
   G4LogicalVolume* lvSiLi;
-  G4VPhysicalVolume* pvSiLi;
+  //  G4VPhysicalVolume* pvSiLi;
 
   G4LogicalVolume* lvcspacer;
   G4VPhysicalVolume* pvcspacer;

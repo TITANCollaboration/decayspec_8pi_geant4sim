@@ -20,13 +20,13 @@ SideCanisterThick  = 10.*mm/2;
 
 // Be Window
 
-SideInnerWindowRadius = 152.4*mm/2;
-SideInnerWindowDist   = 418.*mm;
-SideInnerWindowThick  = 0.08*mm/2;
+//SideInnerWindowRadius = 152.4*mm/2;
+//SideInnerWindowDist   = 418.*mm;
+//SideInnerWindowThick  = 0.08*mm/2;
 
-SideOuterWindowRadius = 152.4*mm/2;
-SideOuterWindowDist  = 455.163*mm;
-SideOuterWindowThick  = 0.250*mm/2;
+//SideOuterWindowRadius = 152.4*mm/2;
+//SideOuterWindowDist  = 455.163*mm;
+//SideOuterWindowThick  = 0.250*mm/2;
 
 SideDetectorName = "SideDetector";
 SideDeadlayerName = "SideDeadLayer";

@@ -11,7 +11,8 @@ MaterialsList* MaterialsList::theMaterialsList = NULL;
 
 MaterialsList::MaterialsList()
 {
-  DefineMaterials();
+  // JonR: This being here was causing a weird doubling of materails
+  // DefineMaterials();
 }
 
 //MaterialsList::~MaterialsList()
