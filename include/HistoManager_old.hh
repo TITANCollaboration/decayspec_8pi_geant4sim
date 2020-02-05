@@ -23,17 +23,17 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file analysis/AnaEx01/include/HistoManager.hh
+/// \file analysis/AnaEx02/include/HistoManager.hh
 /// \brief Definition of the HistoManager class
 //
+// $Id: HistoManager.hh 59868 2012-06-20 13:59:51Z gcosmo $
+// GEANT4 tag $Name: geant4-09-04 $
 //
-// $Id: HistoManager.hh 74272 2013-10-02 14:48:50Z gcosmo $
-// 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef HISTOMANAGER_HH
-#define HISTOMANAGER_HH
+#ifndef HistoManager_h
+#define HistoManager_h 1
 
 #include "globals.hh"
 #include "g4root.hh"
@@ -44,39 +44,68 @@ const G4int MAXNTCOL            = 15;
 
 ///////////////////////////////////////////////////
 const G4double MINENERGYTHRES   = 0.001*keV;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+class TFile;
+class TTree;
+class TH1D;
+
+const G4int MaxHisto = 5;
+const G4int VOLMAX=100;
+const G4int HITMAX=1000;
+const G4int PARMAX=100;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-class HistoManager {
+class HistoManager
+{
 public:
-    HistoManager();
-    ~HistoManager();
+  
+  HistoManager();
+  ~HistoManager();
+   
+  void book();
+  void save(G4int runno=0);
 
-    void Book();
-    void Save();
-    
-    void FillHitNtuple(G4int eventNumber, G4int trackID, G4int parentID, G4int stepNumber, G4int particleType, G4int processType, G4int systemID, G4int cryNumber, G4int detNumber, G4double depEnergy, G4double posx, G4double posy, G4double posz, G4double time, G4int targetZ);
-    void FillStepNtuple(G4int eventNumber, G4int trackID, G4int parentID, G4int stepNumber, G4int particleType, G4int processType, G4int systemID, G4int cryNumber, G4int detNumber, G4double depEnergy, G4double posx, G4double posy, G4double posz, G4double time, G4int targetZ);
+  void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
+  void Normalize(G4int id, G4double fac);    
 
-    void PrintStatistic();
-
-    G4bool GetStepTrackerBool() { return fStepTrackerBool;};
-    G4bool GetHitTrackerBool()  { return fHitTrackerBool;};
-
+  void FillNtuple(G4double energyAbs, G4double energyGap, G4double trackLAbs, G4double trackLGap);
+  void FillNtuple(G4int nrun, G4int nevt, G4int npar, G4int nvol, G4int nhit);
+  void SetVolInfo(std::vector<G4String> volNames, std::vector<G4double> volEmeas, std::vector<G4double> volEdep, std::vector<G4int> nvhits);
+  void SetHitInfo(std::vector<G4double> e, std::vector<G4String> v, std::vector<G4double> x, std::vector<G4double> y, std::vector<G4double> z, std::vector<G4int> pdg);
+  void SetParticleInfo(std::vector<G4int> trackid,std::vector<G4int> parentid,std::vector<G4int> pdg);
+  void PrintStatistic();
+        
 private:
-    G4String G4intToG4String(G4int value);
+  TFile*   rootFile;
+  TH1D*    histo[MaxHisto];            
+  TTree*   ntupl;    
 
-    G4bool        fFactoryOn;
-    G4String      fFileName[2];
+  // volumes
+  G4float volEmeas[VOLMAX];
+  G4float volEdep[VOLMAX];
+  G4int volNhits[VOLMAX];
+  std::vector<std::string> volName;
+  std::vector<std::string>* pvolName;
 
-    G4int         fNtColId[MAXNTCOL];
-    G4int         fNtColIdHit[MAXNTCOL];
-    G4int         fNtColIdStep[MAXNTCOL];
+  //hits
+  G4float hEdep[HITMAX];
+  G4float hx[HITMAX];
+  G4float hy[HITMAX];
+  G4float hz[HITMAX];
+  G4int hTrackId[HITMAX];
+  std::vector<std::string> hVol;
+  std::vector<std::string>* phVol;
 
-    G4bool fStepTrackerBool;
-    G4bool fHitTrackerBool;
+  //particles
+  G4int tId[PARMAX];
+  G4int tParentId[PARMAX];
+  G4int tPdgCode[PARMAX];
+
+  G4String rFileName;
+  G4int nrun,nevt,nvol,npar,nhit;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

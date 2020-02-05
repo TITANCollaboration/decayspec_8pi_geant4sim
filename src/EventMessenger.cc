@@ -29,6 +29,6 @@ EventMessenger::~EventMessenger()
 
 void EventMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 { 
-  if (command == PrintCmd)
-    {eventAction->SetPrintModulo(PrintCmd->GetNewIntValue(newValue));}
+    //  if (command == PrintCmd)
+    //{eventAction->SetPrintModulo(PrintCmd->GetNewIntValue(newValue));}
 }

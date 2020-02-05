@@ -30,7 +30,7 @@ XrayAnalysis::~XrayAnalysis()
   totalHits.clear();
   if (siliDetector) delete siliDetector;
   if (messenger) delete messenger;
-  histo->save();
+  histo->Save();
 }
 
 void XrayAnalysis::CreateHit(G4int detno, G4int trackID, G4int parentID, G4double edep,
@@ -90,8 +90,9 @@ void XrayAnalysis::ProcessEvent(int evtNb)
   }
 
   //histo->SetHitInfo(he,hv,x,y,z,pdg);
-  histo->SetVolInfo(volnames, vemeas, vedep, nvhits);
-  histo->FillNtuple(0,evtNb,0,volnames.size(),currHits.size());
+  //histo->SetVolInfo(volnames, vemeas, vedep, nvhits);
+  //histo->FillNtuple(0,evtNb,0,volnames.size(),currHits.size());
+  //histo->FillHitNtuple(0,evtNb,0,volnames.size(),currHits.size());
 
   // record tree groups
   std::vector< std::vector<PartialHit> > groups = FindPartialHits();

@@ -29,7 +29,7 @@ RunMessenger::~RunMessenger()
 
 void RunMessenger::SetNewValue(G4UIcommand* command, G4String newValue) {
 
-  if (command == runNoCmd ) {
-    runAction->SetRunNumber(runNoCmd->GetNewIntValue(newValue));
-  }
+    //  if (command == runNoCmd ) {
+    //runAction->SetRunNumber(runNoCmd->GetNewIntValue(newValue));
+    // }
 }

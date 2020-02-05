@@ -143,12 +143,13 @@ G4int DetectionSystem8pi::PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVect
     //G4int detectorCopyID = 0;
 
     //G4int copyNumber = detectorCopyID + detectorNumber;
-
-    fAssemblyGe->MakeImprint(expHallLog, move, rotate, detectorNumber);
+    // JonR: the +1 exists because we have to number -1 to 5 to make the math work for placing the detectors 
+    fAssemblyGe->MakeImprint(expHallLog, move, rotate, detectorNumber + 1);
+    //printf("Detector Number : %i\n", detectorNumber + 1);  
     //   fAssemblyInnerBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*1));
     // fAssemblyOuterLowerBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*2));
     // fAssemblyOuterUpperBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*3));
-    fAssembly->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*4));
+      fAssembly->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*4));
 
     return 1;
 }

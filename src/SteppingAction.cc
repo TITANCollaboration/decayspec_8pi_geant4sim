@@ -2,13 +2,16 @@
 #include "G4Step.hh"
 
 #include "DetectorConstruction.hh"
-#include "XrayAnalysis.hh"
-
+//#include "XrayAnalysis.hh"
+#include "EventAction.hh"
 #include "G4VProcess.hh"
 #include "G4ThreeVector.hh"
 #include <sstream>
+#include <vector>
+#include <regex>	
 
-SteppingAction::SteppingAction(DetectorConstruction* detCon, XrayAnalysis* event) : DC(detCon), XA(event)
+SteppingAction::SteppingAction(DetectorConstruction* detCon, EventAction* event) : G4UserSteppingAction(), fDetector(detCon), fEventAction(event)
+    //DC(detCon), XA(event)
 {
 }
 
@@ -16,24 +19,57 @@ SteppingAction::~SteppingAction()
 {
 }
 
+// JonR: Why can't C++ have a decent way to split strings build into it!?!? just why...
+// All this function does is split a string into a vector based on a deliminator
+// this way I can get the actual detector number from av_2_impr_?_8piGermaniumBlockLog_pv_0
+// where ? is the # of the detector.  Using  volume->GetCopyNo() does not work well for this
+// so don't use it.  It'll give you some random(ish?) numbers
+std::vector<std::string> SteppingAction::split(std::string const& str, std::string const& delim)
+{
+   using std::string;
+   string::size_type start(0);
+   string::size_type end(string::npos);
+   std::vector<string> sub;
+
+   while( (end = str.find(delim,start)) != string::npos)
+   {
+      sub.push_back(str.substr(start, end - start));
+      start = end + delim.size();
+   }
+   if(start < str.size() )sub.push_back(str.substr(start, str.size() - start));
+   return sub;
+}
+
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
     // get volume of the current step
     G4VPhysicalVolume* volume;  
-    G4int detno, trackID, parentID, particlePDGenc;
+    G4int detnum, trackID, parentID, particlePDGenc;
     //  G4double edep;
     G4String volName, particleName, processName;
     G4int particleType = 0, processType = 0;
     G4ThreeVector pos;
     size_t found;
 
+    //****JonR: Go through these later
+    G4bool trackSteps   = false;
+    G4int systemID      = 9999;
+    G4int evntNb;
+    fDet = 0;
+    fCry = 0;
+    G4String mnemonic = "ebit";
+    G4int targetZ = -1;
+    //G4int evntNb;
+    evntNb =  fEventAction->GetEventNumber();
+    //****
+    
     volume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
     volName = volume->GetName();
-    
-    //detno = (volume->GetCopyNo() * 2) + 2;
-    detno = volume->GetCopyNo();
 
-    volName  =volume->GetName(); //std::to_string(detno); 
+    //detno = (volume->GetCopyNo() * 2) + 2;
+    // detnum = volume->GetCopyNo();  //JonR: This goes weird, don't use it.. 
+    //  G4cout << "VolName: " << volName << "\t DetNum: "<< detnum << "\n";
+    //    volName = volume->GetName(); //std::to_string(detno); 
     //    G4String volname = volume->GetName();
 
     G4Track* theTrack = aStep->GetTrack();
@@ -64,7 +100,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
     // this can be modified to add more processes
     if(theTrack->GetCreatorProcess() != NULL) {
-		G4String processName = theTrack->GetCreatorProcess()->GetProcessName();
+		processName = theTrack->GetCreatorProcess()->GetProcessName();
 		//G4cout<<"found secondary, particle "<<particleName<<", creation process "<<process<<G4endl;
         if (processName == "RadioactiveDecay")      processType = 1;
         else if (processName == "eIoni")            processType = 2;
@@ -83,7 +119,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     G4ThreeVector pos2 = point2->GetPosition();
 
     //G4double time1 = point1->GetGlobalTime();
-    //G4double time2 = point2->GetGlobalTime();
+    G4double time2 = point2->GetGlobalTime();
     G4double timePostStepPoint = point2->GetGlobalTime();
     
     particlePDGenc = aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
@@ -103,12 +139,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     // 8PI energy deposits ////////////////////////////////////////////////////////////////////////////////
     found = volName.find("8piGermaniumBlockLog");
     if (edep != 0 && found!=G4String::npos) {
-        //SetDetNumberForGenericDetector(volname);
-        //mnemonic.replace(0,3,"8PI");
-        //mnemonic.replace(3,2,G4intToG4String(fDet));
-        //mnemonic.replace(5,1,GetCrystalColour(fCry));
-        //systemID = 6000;
-        //        fEventAction->AddHitTracker(mnemonic, evntNb, trackID, parentID, fStepNumber, particleType, processType, systemID, fCry-1, fDet-1, edep, pos2.x(), pos2.y(), pos2.z(), time2, targetZ);
-        XA->CreateHit(detno, trackID, parentID, edep, volName, particleName, processName, pos, particlePDGenc);
+
+        // JonR: we just get the detector # here
+        detnum = std::stoi(split(volName.c_str(), "_")[3]);  // JonR: Why can't C++ have a decent way to split strings build into it!?!? just why... 
+        // G4cout << "VolName: " << volName << "\t DetNum: "<< detnum << "\n";
+        // JonR: Throw the data into ROOT
+        fEventAction->AddHitTracker(mnemonic, evntNb, trackID, parentID, fStepNumber, particleType, processType, systemID, fCry-1, detnum, edep, pos2.x(), pos2.y(), pos2.z(), time2, targetZ);
+  
     }
 }

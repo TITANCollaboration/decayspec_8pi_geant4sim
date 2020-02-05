@@ -23,255 +23,187 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file analysis/AnaEx02/src/HistoManager.cc
+/// \file analysis/AnaEx01/src/HistoManager.cc
 /// \brief Implementation of the HistoManager class
 //
-// $Id: HistoManager.cc 65827 2012-11-29 10:21:47Z gcosmo $
-// GEANT4 tag $Name: geant4-09-04 $
 //
+// $Id: HistoManager.cc 74272 2013-10-02 14:48:50Z gcosmo $
+// 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-#include <TH1D.h>
-#include <TFile.h>
-#include <TTree.h>
-#include <CLHEP/Units/SystemOfUnits.h>
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+// This file was originally written written for the GRIFFIN experiment and
+// is now being taken and modified for the EBIT DecaySpec experiement by Jon Ringuette
+// Feb 5th 2020
 
 #include "HistoManager.hh"
 #include "G4UnitsTable.hh"
-#include <sstream>
-
+#include "G4SystemOfUnits.hh"
+#include "Randomize.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-HistoManager::HistoManager() : rootFile(0), ntupl(0)
-{
+HistoManager::HistoManager() {
+	fFileName[0] = "g4out";
+	fFactoryOn = false;
 
-  // histograms
-  for (G4int k = 0; k < MaxHisto; k++) histo[k] = 0;
-
-  // ntuple
-  ntupl = 0;
-  pvolName = &volName;
+	// Only fill one NTuple at a time. If fStepTrackerBool is true, then fHitTrackerBool should be false, or vise-versa.
+	// There is no need to have the hit NTuple and the step NTuple.
+	fHitTrackerBool = true;
+	fStepTrackerBool = false;
+	// ntuple
+	for(G4int k=0; k<MAXNTCOL; k++) {
+		//        fNtColId[k] = 0;
+		fNtColIdHit[k] = 0;
+		fNtColIdStep[k] = 0;
+	}
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HistoManager::~HistoManager()
-{
-  if ( rootFile ) delete rootFile;
+{ }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void HistoManager::Book() {
+	// Create or get analysis manager
+	// The choice of analysis technology is done via selection of a namespace
+	// in HistoManager.hh
+    // JonR: The above doesn't seem to be true..
+	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+	analysisManager->SetVerboseLevel(0);
+	G4String extension = analysisManager->GetFileType();
+	fFileName[1] = fFileName[0] + "." + extension; // creating root output file in build folder
+
+	// Create directories
+	// Open an output file
+	G4bool fileOpen = analysisManager->OpenFile(fFileName[0]); 
+	if(!fileOpen) {
+		G4cout<<"---> HistoManager::book(): cannot open "<<fFileName[1]<<G4endl;
+		return;
+	}
+
+	///////////////////////////////////////////////////////////////////
+	// Create 1 ntuple
+	if(fHitTrackerBool) {
+        printf("Hit Tracker\n");
+		analysisManager->CreateNtuple("ntuple", "HitTracker");
+		fNtColIdHit[0] = analysisManager->CreateNtupleIColumn("eventNumber");
+		fNtColIdHit[1] = analysisManager->CreateNtupleIColumn("trackID");
+		fNtColIdHit[2] = analysisManager->CreateNtupleIColumn("parentID");
+		fNtColIdHit[3] = analysisManager->CreateNtupleIColumn("stepNumber");
+		fNtColIdHit[4] = analysisManager->CreateNtupleIColumn("particleType");
+		fNtColIdHit[5] = analysisManager->CreateNtupleIColumn("processType");
+		fNtColIdHit[6] = analysisManager->CreateNtupleIColumn("systemID");
+		fNtColIdHit[7] = analysisManager->CreateNtupleIColumn("cryNumber");
+		fNtColIdHit[8] = analysisManager->CreateNtupleIColumn("detNumber");
+		fNtColIdHit[9] = analysisManager->CreateNtupleDColumn("depEnergy");
+		fNtColIdHit[10] = analysisManager->CreateNtupleDColumn("posx");
+		fNtColIdHit[11] = analysisManager->CreateNtupleDColumn("posy");
+		fNtColIdHit[12] = analysisManager->CreateNtupleDColumn("posz");
+		fNtColIdHit[13] = analysisManager->CreateNtupleDColumn("time");
+		fNtColIdHit[14] = analysisManager->CreateNtupleIColumn("targetZ");
+		analysisManager->FinishNtuple();
+		G4cout<<"created ntuple HitTracker"<<G4endl;
+	}
+
+
+	if(fStepTrackerBool) {
+        printf("Step Tracker\n");
+		analysisManager->CreateNtuple("ntuple", "StepTracker");
+		fNtColIdStep[0] = analysisManager->CreateNtupleIColumn("eventNumber");
+		fNtColIdStep[1] = analysisManager->CreateNtupleIColumn("trackID");
+		fNtColIdStep[2] = analysisManager->CreateNtupleIColumn("parentID");
+		fNtColIdStep[3] = analysisManager->CreateNtupleIColumn("stepNumber");
+		fNtColIdStep[4] = analysisManager->CreateNtupleIColumn("particleType");
+		fNtColIdStep[5] = analysisManager->CreateNtupleIColumn("processType");
+		fNtColIdStep[6] = analysisManager->CreateNtupleIColumn("systemID");
+		fNtColIdStep[7] = analysisManager->CreateNtupleIColumn("cryNumber");
+		fNtColIdStep[8] = analysisManager->CreateNtupleIColumn("detNumber");
+		fNtColIdStep[9] = analysisManager->CreateNtupleDColumn("depEnergy");
+		fNtColIdStep[10] = analysisManager->CreateNtupleDColumn("posx");
+		fNtColIdStep[11] = analysisManager->CreateNtupleDColumn("posy");
+		fNtColIdStep[12] = analysisManager->CreateNtupleDColumn("posz");
+		fNtColIdStep[13] = analysisManager->CreateNtupleDColumn("time");
+		fNtColIdStep[14] = analysisManager->CreateNtupleIColumn("targetZ");
+		analysisManager->FinishNtuple();
+	}
+
+	fFactoryOn = true;
+	G4cout<<"----> Histogram Tree is opened in "<<fFileName[1]<<G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::book()
-{
-// Creating a tree container to handle histograms and ntuples.
-// This tree is associated to an output file.
-//
-//G4String fileName = "rebit.root";
-  char fntemplate[] = "_rebitXXXXXX";
-  rFileName = G4String(mktemp(fntemplate )) + ".root"; // jonr changed to mkstemp..
-  std::cout << "root file name >> " << rFileName << " << " << std::endl;
-//G4cout << "in book" << G4endl;
-  rootFile = new TFile(rFileName.c_str(), "RECREATE");
-//G4cout << "in book 2" << G4endl;
-  if (!rootFile) {
-    G4cout << " HistoManager::book :"
-           << " problem creating the ROOT TFile "
-           << G4endl;
-    return;
-  }
+void HistoManager::Save() {
+	if(fFactoryOn) {
+		G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+		analysisManager->Write();
+		analysisManager->CloseFile();
+		G4cout<<"----> Histogram Tree is saved in "<<fFileName[1]<<G4endl;
 
-  histo[1] = new TH1D("1", "Edep in absorber", 100, 0., 800*CLHEP::MeV);
-  if (!histo[1]) G4cout << "\n can't create histo 1" << G4endl;
-  histo[2] = new TH1D("2", "Edep in gap", 100, 0., 100*CLHEP::MeV);
-  if (!histo[2]) G4cout << "\n can't create histo 2" << G4endl;
-  histo[3] = new TH1D("3", "trackL in absorber", 100, 0., 1*CLHEP::m);
-  if (!histo[3]) G4cout << "\n can't create histo 3" << G4endl;
-  histo[4] = new TH1D("4", "trackL in gap", 100, 0., 50*CLHEP::cm);
-  if (!histo[4]) G4cout << "\n can't create histo 4" << G4endl;
+		delete G4AnalysisManager::Instance();
+		fFactoryOn = false;
+	}
+}
 
+void HistoManager::FillHitNtuple(G4int eventNumber, G4int trackID, G4int parentID, G4int stepNumber, G4int particleType, G4int processType, G4int systemID, G4int cryNumber, G4int detNumber, G4double depEnergy, G4double posx, G4double posy, G4double posz, G4double time, G4int targetZ) {
+	if(fHitTrackerBool) {
+		G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+		analysisManager->FillNtupleIColumn(fNtColIdHit[0], eventNumber);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[1], trackID);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[2], parentID);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[3], stepNumber);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[4], particleType);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[5], processType);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[6], systemID);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[7], cryNumber);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[8], detNumber);
+		analysisManager->FillNtupleDColumn(fNtColIdHit[9], depEnergy);
+		analysisManager->FillNtupleDColumn(fNtColIdHit[10], posx);
+		analysisManager->FillNtupleDColumn(fNtColIdHit[11], posy);
+		analysisManager->FillNtupleDColumn(fNtColIdHit[12], posz);
+		analysisManager->FillNtupleDColumn(fNtColIdHit[13], time);
+		analysisManager->FillNtupleIColumn(fNtColIdHit[14], targetZ);
+		analysisManager->AddNtupleRow();
+	}
+}
 
-// create 1 ntuple in subdirectory "tuples"
-//
-  ntupl = new TTree("T", "T");
-  ntupl->Branch("nrun", &nrun, "nrun/I");
-  ntupl->Branch("nevt", &nevt, "nevt/I");
-  ntupl->Branch("npar", &npar, "npar/I");
-  ntupl->Branch("nvol", &nvol, "nvol/I");
-  ntupl->Branch("nhit", &nhit, "nhit/I");
-
-  ntupl->Branch("volEmeas", &volEmeas, "volEmeas[nvol]/F");
-  ntupl->Branch("volEdep", &volEdep, "volEdep[nvol]/F");
-  ntupl->Branch("volNhits", &volNhits, "volNhits[nvol]/I");
-  ntupl->Branch("volName", &pvolName);
-// string booking according to http://root.cern.ch/phpBB3/viewtopic.php?f=3&t=1657
-
-  ntupl->Branch("hEdep", &hEdep, "hEdep[nhit]/F");
-  ntupl->Branch("hx", &hx, "hx[nhit]/F");
-  ntupl->Branch("hy", &hy, "hy[nhit]/F");
-  ntupl->Branch("hz", &hz, "hz[nhit]/F");
-  ntupl->Branch("hTrackId", &hTrackId, "hTrackId[nhit]/I");
-  ntupl->Branch("hv", &hVol);
-
-  ntupl->Branch("tId", &tId, "tId[npar]/I");
-  ntupl->Branch("tParentId", &tParentId, "tParentId[npar]/I");
-  ntupl->Branch("tPdgCode", &tPdgCode, "tPdgCode[npar]/I");
-
-
-  /*
-  ntupl->Branch("Eabs", &Eabs, "Eabs/D");
-  ntupl->Branch("Egap", &Egap, "Egap/D");
-  ntupl->Branch("Labs", &Labs, "Labs/D");
-  ntupl->Branch("Lgap", &Lgap, "Lgap/D");
-  */
-
-  G4cout << "\n----> Histogram file is opened in " << rFileName << G4endl;
+void HistoManager::FillStepNtuple(G4int eventNumber, G4int trackID, G4int parentID, G4int stepNumber, G4int particleType, G4int processType, G4int systemID, G4int cryNumber, G4int detNumber, G4double depEnergy, G4double posx, G4double posy, G4double posz, G4double time, G4int targetZ) {
+	if(fStepTrackerBool) {
+		G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+		analysisManager->FillNtupleIColumn(fNtColIdStep[0], eventNumber);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[1], trackID);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[2], parentID);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[3], stepNumber);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[4], particleType);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[5], processType);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[6], systemID);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[7], cryNumber);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[8], detNumber);
+		analysisManager->FillNtupleDColumn(fNtColIdStep[9], depEnergy);
+		analysisManager->FillNtupleDColumn(fNtColIdStep[10], posx);
+		analysisManager->FillNtupleDColumn(fNtColIdStep[11], posy);
+		analysisManager->FillNtupleDColumn(fNtColIdStep[12], posz);
+		analysisManager->FillNtupleDColumn(fNtColIdStep[13], time);
+		analysisManager->FillNtupleIColumn(fNtColIdStep[14], targetZ);
+		analysisManager->AddNtupleRow();
+	}
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::save(G4int runno) {
-  std::cout << "entering save" << std::endl;
-  std::cout << runno << std::endl;
-
-  if (rootFile) {
-    std::cout << "write" << std::endl;
-    rootFile->Write();       // Writing the histograms to the file
-    std::cout << "close" << std::endl;
-    rootFile->Close();        // and closing the tree (and the file)
-    //G4cout << "----> Histogram Tree is saved in " << rFileName << G4endl;
-
-    //delete rootFile;
-  }
-
-  if (1) {
-    std::ostringstream nfn;
-    nfn << "rebit_";
-    nfn << runno;
-    nfn << ".root";
-    std::cout << "rename" << std::endl;
-    std::cout << rFileName.c_str() << " " << nfn.str().c_str() << std::endl;
-    int rc = rename(rFileName.c_str(), nfn.str().c_str());
-    if (rc == -1) {
-      G4cout << "problem with output files " << rFileName << " and " << nfn.str() << G4endl;
-    }
-    else {
-      G4cout << "----> Histogram Tree is renamed to " << nfn.str() << G4endl;
-    }
-  }
-}
-
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void HistoManager::FillHisto(G4int ih, G4double xbin, G4double weight)
-{
-  if (ih >= MaxHisto) {
-    G4cout << "---> warning from HistoManager::FillHisto() : histo " << ih
-           << " does not exist. (xbin=" << xbin << " weight=" << weight << ")"
-           << G4endl;
-    return;
-  }
-  if  (histo[ih]) { histo[ih]->Fill(xbin, weight); }
+void HistoManager::PrintStatistic() {
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::Normalize(G4int ih, G4double fac)
-{
-  if (ih >= MaxHisto) {
-    G4cout << "---> warning from HistoManager::Normalize() : histo " << ih
-           << " does not exist. (fac=" << fac << ")" << G4endl;
-    return;
-  }
-  if (histo[ih]) histo[ih]->Scale(fac);
+// JonR, I don't think this is really needed, removing for now
+/*
+G4String HistoManager::G4intToG4String(G4int value) {
+	G4String theString;
+	std::stringstream out;
+	out<<value;
+	theString = out.str();
+	return theString;
 }
-
-void HistoManager::SetParticleInfo(std::vector<G4int> trackid, std::vector<G4int> parentid, std::vector<G4int> pdg) {
-  G4int N = (G4int)trackid.size();
-  if (N >= PARMAX) {
-    N = PARMAX;
-    G4cout << "WARNING (HistoManager): Too many particles. Truncating." << G4endl;
-  }
-  for (G4int i = 0; i < N; i++) {
-    tId[i] = trackid[i];
-    tParentId[i] = parentid[i];
-    tPdgCode[i] = pdg[i];
-  }
-  npar = N;
-}
-
-
-void HistoManager::SetHitInfo(std::vector<G4double> e, std::vector<G4String> v,
-                              std::vector<G4double> x, std::vector<G4double> y, std::vector<G4double> z,
-                              std::vector<G4int> trackid) {
-
-  G4int N = (G4int)e.size();
-  if (N >= HITMAX) {
-    N = HITMAX;
-    G4cout << "WARNING (HistoManager): Too many hits. Truncating." << G4endl;
-  }
-  hVol.clear();
-  for (G4int i = 0; i < N; i++) {
-    hEdep[i] = e[i];
-    hx[i] = x[i];
-    hy[i] = y[i];
-    hz[i] = z[i];
-    hVol.push_back(v[i]);
-    hTrackId[i] = trackid[i];
-  }
-  nhit = N;
-}
-
-void HistoManager::SetVolInfo(std::vector<G4String> vn, std::vector<G4double> volem,
-                              std::vector<G4double> voled, std::vector<G4int> nvhits) {
-
-  G4int N = (G4int)vn.size();
-  if (N >= VOLMAX) {
-    N = VOLMAX;
-    G4cout << "WARNING (HistoManager): Too many volumes. Truncating." << G4endl;
-  }
-  pvolName->clear();
-  for (G4int i = 0; i < N; i++) {
-    volEmeas[i] = volem[i];
-    volEdep[i] = voled[i];
-    volNhits[i] = nvhits[i];
-    pvolName->push_back(vn[i].c_str());
-  }
-  nvol = N;
-}
-
-void HistoManager::FillNtuple(G4int nr, G4int ne, G4int np, G4int nv, G4int nh) {
-  nrun = nr; nevt = ne;
-  //npar=np; nvol=nv; nhit=nh;
-  if (ntupl) ntupl->Fill();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-
-void HistoManager::PrintStatistic()
-{
-  if (histo[1]) {
-    G4cout << "\n ----> print histograms statistic \n" << G4endl;
-
-    G4cout
-        << " EAbs : mean = " << G4BestUnit(histo[1]->GetMean(), "Energy")
-        << " rms = " << G4BestUnit(histo[1]->GetRMS(),  "Energy") << G4endl;
-    G4cout
-        << " EGap : mean = " << G4BestUnit(histo[2]->GetMean(), "Energy")
-        << " rms = " << G4BestUnit(histo[2]->GetRMS(),  "Energy") << G4endl;
-    G4cout
-        << " LAbs : mean = " << G4BestUnit(histo[3]->GetMean(), "Length")
-        << " rms = " << G4BestUnit(histo[3]->GetRMS(),  "Length") << G4endl;
-    G4cout
-        << " LGap : mean = " << G4BestUnit(histo[4]->GetMean(), "Length")
-        << " rms = " << G4BestUnit(histo[4]->GetRMS(),  "Length") << G4endl;
-
-  }
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-
+*/

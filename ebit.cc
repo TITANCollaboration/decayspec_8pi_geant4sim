@@ -9,7 +9,7 @@
 #include "RunAction.hh"
 #include "EventAction.hh"
 #include "SteppingAction.hh"
-#include "XrayAnalysis.hh"
+//#include "XrayAnalysis.hh"
 #include "HistoManager.hh"
 
 #include "G4PhysicalConstants.hh"
@@ -81,17 +81,18 @@ int main(int argc, char** argv)
   visManager->Initialize();
 
   // set user custom classes
-  XrayAnalysis* xrayAnal = new XrayAnalysis();
-  HistoManager*  histo = new HistoManager();
-  xrayAnal->SetHistoManager(histo);
-  histo->book();
+  //  XrayAnalysis* xrayAnal = new XrayAnalysis();
+  //  HistoManager*  histo = new HistoManager();
+  //  xrayAnal->SetHistoManager(histo);
+  // histo->Book();
 
   // set user action classes
   //
   PrimaryGeneratorAction* genAction = new PrimaryGeneratorAction();
-  RunAction* runAction = new RunAction(xrayAnal);
-  EventAction* eventAction = new EventAction(xrayAnal);
-  SteppingAction* steppingAction = new SteppingAction(detector, xrayAnal);
+  //  RunAction* runAction = new RunAction(xrayAnal);
+  RunAction* runAction = new RunAction();
+  EventAction* eventAction = new EventAction(runAction);
+  SteppingAction* steppingAction = new SteppingAction(detector, eventAction);
   runManager->SetUserAction(genAction);
   runManager->SetUserAction(runAction);
   runManager->SetUserAction(eventAction);
@@ -118,12 +119,12 @@ int main(int argc, char** argv)
     delete ui;
   }
 
-
-  histo->save(runAction->GetRunNumber());
+    //  histo->Save();
+    //histo->Save(runAction->GetRunNumber());
   // job termination
   //
   if (runManager) delete runManager;
-  if (xrayAnal) delete xrayAnal;
+  // if (xrayAnal) delete xrayAnal;
 
   return 0;
 }
