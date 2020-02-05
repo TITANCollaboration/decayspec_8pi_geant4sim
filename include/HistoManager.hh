@@ -36,7 +36,14 @@
 #define HistoManager_h 1
 
 #include "globals.hh"
+#include "g4root.hh"
 
+#include "G4SystemOfUnits.hh" // new version geant4.10 requires units
+
+const G4int MAXNTCOL            = 15;
+
+///////////////////////////////////////////////////
+const G4double MINENERGYTHRES   = 0.001*keV;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class TFile;
@@ -63,16 +70,11 @@ public:
   void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
   void Normalize(G4int id, G4double fac);    
 
-  void FillNtuple(G4double energyAbs, G4double energyGap,
-		  G4double trackLAbs, G4double trackLGap);
+  void FillNtuple(G4double energyAbs, G4double energyGap, G4double trackLAbs, G4double trackLGap);
   void FillNtuple(G4int nrun, G4int nevt, G4int npar, G4int nvol, G4int nhit);
-  void SetVolInfo(std::vector<G4String> volNames, std::vector<G4double> volEmeas,
-		  std::vector<G4double> volEdep, std::vector<G4int> nvhits);
-  void SetHitInfo(std::vector<G4double> e, std::vector<G4String> v,
-		  std::vector<G4double> x, std::vector<G4double> y, std::vector<G4double> z,
-		  std::vector<G4int> pdg);
+  void SetVolInfo(std::vector<G4String> volNames, std::vector<G4double> volEmeas, std::vector<G4double> volEdep, std::vector<G4int> nvhits);
+  void SetHitInfo(std::vector<G4double> e, std::vector<G4String> v, std::vector<G4double> x, std::vector<G4double> y, std::vector<G4double> z, std::vector<G4int> pdg);
   void SetParticleInfo(std::vector<G4int> trackid,std::vector<G4int> parentid,std::vector<G4int> pdg);
-
   void PrintStatistic();
         
 private:

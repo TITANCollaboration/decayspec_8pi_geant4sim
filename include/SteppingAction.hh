@@ -17,8 +17,9 @@ public:
   void UserSteppingAction(const G4Step*);
   
 private:
-  DetectorConstruction* DC;
-  XrayAnalysis* XA;
+    DetectorConstruction* DC;
+    XrayAnalysis* XA;
+    G4int totalParticles = 0;
 };
 
 #endif

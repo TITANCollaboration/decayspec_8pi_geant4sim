@@ -105,7 +105,7 @@ void DetectorConstruction::DefineEbitMaterials()
   InsulatorMater = mlist->GetMaterial("Al2O3");
   MacorRingMater = mlist->GetMaterial("Macor");
   HousingMater = mlist->GetMaterial("SSteel");
-  CoilHolderMater = CoilHolderMater; //mlist->GetMaterial("SSteel");
+  CoilHolderMater = mlist->GetMaterial("SSteel");
   
   delete mlist;
 }
@@ -188,11 +188,13 @@ void DetectorConstruction::ConstructTrap() {
   /*----------------------------------------------------*/
 
   // placement coordinates
-  //
-  G4double x1, y1, z1, phi=0.;
-  G4int ONFLOORTESTS=0;
+  //  //
+
+  
+  G4double x1 = 0, y1 = 0, z1 = 0, phi=0., r1 = 0;
 
   // Be window
+  
    G4EllipticalTube* svSideInnerWindow = new G4EllipticalTube(WindowName, SideInnerWindowRadius, SideInnerWindowRadius, SideInnerWindowThick);
   lvSideInnerWindow = new G4LogicalVolume(svSideInnerWindow, WindowMater, WindowName);
   for (int i=-1; i<6; i++) {
@@ -200,31 +202,31 @@ void DetectorConstruction::ConstructTrap() {
     phi = 45*deg * j;
     G4RotationMatrix rotWin;
     rotWin.rotateX(0*deg);rotWin.rotateY(270*deg); rotWin.rotateZ(phi);
-    G4double r1 = 418.*mm;//SideInnerWindowDist + SideInnerWindowThick;
+    r1 = 418.*mm;//SideInnerWindowDist + SideInnerWindowThick;
     x1 = cos(phi)*r1;
     y1 = sin(phi)*r1;
     z1 = 0;
     G4Transform3D transWin(rotWin, G4ThreeVector(x1,y1,z1));
     pvSideInnerWindow = new G4PVPlacement(transWin, lvSideInnerWindow, WindowName, lvWorld, 0, i,checkOverlaps);
   }
- 
+  
   
   // Outer Windows
   //
   G4EllipticalTube* svSideOuterWindow = new G4EllipticalTube(WindowName, SideOuterWindowRadius, SideOuterWindowRadius, SideOuterWindowThick);
   lvSideOuterWindow = new G4LogicalVolume(svSideOuterWindow, WindowMater, WindowName);
-  for (int i=-1; i<6; i++) {
+    for (int i=-1; i<6; i++) {
     int j = -i;
     phi = 45*deg * j;
     G4RotationMatrix rotWin;
     rotWin.rotateX(0*deg);rotWin.rotateY(270*deg); rotWin.rotateZ(phi);
-    G4double r1 = 455.163*mm;//SideOuterWindowDist + SideOuterWindowThick;
+    r1 = 455.163*mm;//SideOuterWindowDist + SideOuterWindowThick;
     x1 = cos(phi)*r1;
     y1 = sin(phi)*r1;
     z1 = 0;
     G4Transform3D transWin(rotWin, G4ThreeVector(x1,y1,z1));
     pvSideOuterWindow = new G4PVPlacement(transWin, lvSideOuterWindow, WindowName, lvWorld, 0, i,checkOverlaps);
-  }
+    }
 
   // EBIT
    G4Tubs* svEbitTube = new G4Tubs(EbitTubeName, EbitTubeMinR, EbitTubeMaxR,
@@ -236,21 +238,23 @@ void DetectorConstruction::ConstructTrap() {
    G4double maxStep = 15.*cm, maxLength = 100.*m;
    lvEbitTube->SetUserLimits(new G4UserLimits(maxStep, maxLength));
 
-
-
+   
+   
    // Electrode
   //
   // central electrode, middle piece
   G4Tubs* svElectrodeMid = new G4Tubs(ElectrodeName, ElectrodeMidMinR, ElectrodeMidMaxR,
 				      ElectrodeMidLength, ElectrodeMidStartPhi, ElectrodeMidSweepPhi);
   lvElectrodeMid = new G4LogicalVolume(svElectrodeMid, ElectrodeMater, ElectrodeName);
+  
   for (int i=0; i<8; i++) {
     phi = (45*i - 2.5*(1 - pow(-1, i))) * deg;
     G4RotationMatrix rotElec;
     rotElec.rotateZ(phi);
     x1 = 0; y1 = 0; z1 = 0;
     G4Transform3D transElec(rotElec, G4ThreeVector(x1,y1,z1));
-    pvElectrodeMid = new G4PVPlacement(transElec, lvElectrodeMid, ElectrodeName, lvWorld, 0, i);
+
+    pvElectrodeMid = new G4PVPlacement(transElec, lvElectrodeMid, ElectrodeName, lvWorld, 0, i, checkOverlaps);
   }
   
   // end pieces and cuts
@@ -273,8 +277,9 @@ void DetectorConstruction::ConstructTrap() {
   				     ElectrodeName, lvWorld, 0, 0);
   pvElectrodeEnd = new G4PVPlacement(0, G4ThreeVector(x1,y1,-z1), lvElectrodeEnd,
   				     ElectrodeName, lvWorld, 0, 0);
-  
+   
   // guard electrodes
+  
   x1 = 0; y1 = 0; phi = 0;
   z1 = ElectrodeMidLength + 2*ElectrodeEndLength + 2*InsulatorLength + ElectrodeGuardLength;
   G4Tubs* svElectrodeGuard = new G4Tubs(ElectrodeName, ElectrodeGuardMinR, ElectrodeGuardMaxR,
@@ -314,6 +319,7 @@ void DetectorConstruction::ConstructTrap() {
   
   // Insulating disks
   //
+  
   x1 = 0; y1 = 0; phi = 0;
   z1 = ElectrodeMidLength + 2*ElectrodeEndLength + InsulatorLength;
   G4Tubs* svInnerInsulator = new G4Tubs(InsulatorName, InsulatorInnerMinR, InsulatorMaxR,
@@ -335,6 +341,7 @@ void DetectorConstruction::ConstructTrap() {
   
   // Macor rings
   // set one
+  
   x1 = 0; y1 = 0; phi = 0;
   z1 = ElectrodeMidLength + 2*ElectrodeEndLength + MacorRingInnerLength;
   G4Tubs* svInnerMacorRing = new G4Tubs(MacorRingName, MacorRingMinR, MacorRingMidR,
@@ -363,8 +370,10 @@ void DetectorConstruction::ConstructTrap() {
   pvOuterMacorRing = new G4PVPlacement(0, G4ThreeVector(x1,y1,-z1), lvOuterMacorRing,
   				       MacorRingName, lvWorld, 0, 3);
   
+  
   // Housing
   //
+  
   x1 = 0; y1 = 0; z1 = 0; phi = 90*deg;
   G4Tubs* svHousing = new G4Tubs(HousingName, HousingMinR, HousingMaxR,
 				 HousingLength, HousingStartPhi, HousingSweepPhi);
@@ -396,6 +405,7 @@ void DetectorConstruction::ConstructTrap() {
   
   // Coil Holder
   //
+  
   x1 = 0; y1 = 0; z1 = 0; phi = 45*deg;
   G4Tubs* svCHMid = new G4Tubs(CoilHolderName, CHInnerRadius, CHMidRadius, CHMidLength, CHStartPhi, CHSweepPhi);
   G4EllipticalTube* svCHCut3 = new G4EllipticalTube("", CHCutRadius3, CHCutRadius3, CHMidRadius);
@@ -424,130 +434,6 @@ void DetectorConstruction::ConstructTrap() {
   pvCHEnd = new G4PVPlacement(0, G4ThreeVector(x1,y1,z1), lvCHEnd, CoilHolderName, lvWorld, 0, 0);
   pvCHEnd = new G4PVPlacement(0, G4ThreeVector(x1,y1,-z1), lvCHEnd, CoilHolderName, lvWorld, 0, 0);
 
-
-  
-  //pvSiLi = new G4PVPlacement(0, G4ThreeVector(), lvSiLi, "SiLi", lvWorld, 1, 0, checkOverlaps);
-
-  if (0) {
-    //perhaps also place a stell vessel
-    G4Tubs* vessel = new G4Tubs("vessel",40*cm,41*cm,80*cm/2,0,360*deg);
-    lvVessel = new G4LogicalVolume(vessel, SSteelMater, "vessel");
-    G4RotationMatrix rotvessel;
-    phi=90*deg;
-    rotvessel.rotateY(270*deg); rotvessel.rotateZ(phi);
-    G4Transform3D trans_vessel(rotvessel, G4ThreeVector(-460*mm,0,0));
-    pvVessel = new G4PVPlacement(trans_vessel, lvVessel, "vessel", lvWorld, 1, 0, checkOverlaps);
-
-    // and a steel port ring
-    G4Tubs* port8 = new G4Tubs("port8",4.75*2.53*cm/2,8*2.54*cm/2,2*cm/2,0,360*deg);
-    lvPort8 = new G4LogicalVolume(port8, SSteelMater, "port8");
-    G4RotationMatrix rotport8;
-    phi=0;
-    rotport8.rotateY(270*deg); rotport8.rotateZ(phi);
-    G4Transform3D trans_port8(rotport8, G4ThreeVector(-10*mm,0,0));
-    pvPort8 = new G4PVPlacement(trans_port8, lvPort8, "port8", lvWorld, 1, 0, checkOverlaps);
-  }
-
-  /*
-  if (ONFLOORTESTS) {
-    // this assumes a base plate and a back(/end) plate.
-    //   the usual setup is:
-    //   the end plate (with the source)is 130mm in front of the crystal.
-    //   the rods are 330mm long.
-    //   the base plate is on the other end of the rods
-    //   a modified setup for the ba133 calib 4/2013 is:
-    //   the end plate is an additional 155 farther away from the crystal.
-    //   (detector pulled back a little)
-    //   a 3rd (and eventually nominal setup for the strong R600 Ba133)
-    //   two sets of rods instead of one, so distance 130+330 
-    //
-    //perhaps a steel floor of sorts?
-    G4Box* floor = new G4Box("floor", WorldSize, WorldSize, 0.5*cm/2);
-    lvFloor = new G4LogicalVolume(floor, SSteelMater, "floor");
-    pvFloor = new G4PVPlacement(0, G4ThreeVector(0,0,-150*mm), lvFloor, "floor", lvWorld, 1, 0, checkOverlaps);
-
-    // create a virtual box for the support structure
-    //G4Box* boxSuSt = new G4Box("SupporStruct", 49*cm/2, 24*cm/2, 24*cm/2);
-    //lvSupportStruct = new G4LogicalVolume(boxSuSt, WorldMater, "SupporStructure");
-
-    // base plate
-    G4double baplZ=20*mm;
-    G4Box* baplBase = new G4Box("bapl", 200*mm/2,200*mm/2,baplZ/2);
-    G4Tubs* baplHole = new G4Tubs("bapl",0,100*mm/2,baplZ,0,360*deg);
-    G4SubtractionSolid* baPl =
-      new G4SubtractionSolid("baPl",baplBase,baplHole,NULL,G4ThreeVector(0,0,0));
-    lv_baPl = new G4LogicalVolume(baPl, BdiscMater, "baPl");
-    G4RotationMatrix rotbapl;
-    phi=0;
-    rotbapl.rotateY(270*deg); rotbapl.rotateZ(phi);
-    G4Transform3D trans_bapl(rotbapl, G4ThreeVector(200*mm+baplZ/2,0,0));
-    pv_baPl = new G4PVPlacement(trans_bapl, lv_baPl, "baPl", lvSiLi, 1, 0, checkOverlaps);
-
-    // end plate
-    G4double endplZ=13*mm;
-    G4Box* endplBase = new G4Box("endpl", 200*mm/2,200*mm/2,endplZ/2);
-    G4Tubs* endplHole = new G4Tubs("endpl",0,125*mm/2,endplZ,0,360*deg);
-    G4SubtractionSolid* endpl =
-      new G4SubtractionSolid("endpl",endplBase,endplHole,NULL,G4ThreeVector(0,0,0));
-    lv_endPl = new G4LogicalVolume(endpl, BdiscMater, "endPl");
-    G4RotationMatrix rotendpl;
-    phi=0;
-    rotendpl.rotateY(270*deg); rotendpl.rotateZ(phi);
-    G4Transform3D trans_endpl(rotendpl, G4ThreeVector(-130*mm-endplZ/2,0,0));
-    pv_endPl = new G4PVPlacement(trans_endpl, lv_endPl, "endPl", lvSiLi, 1, 0, checkOverlaps);
-
-
-    //rods
-    G4double rodZ=330*mm;
-    G4Tubs* rod = new G4Tubs("rod",0,20*mm/2,rodZ/2,0,360*deg);
-    lvRod = new G4LogicalVolume(rod, BdiscMater, "rod");
-
-    G4RotationMatrix rotrod;
-    phi=0;
-    rotrod.rotateY(270*deg); rotrod.rotateZ(phi);
-    G4Transform3D trans_rod0(rotrod, G4ThreeVector(35*mm,90*mm,90*mm));
-    pvRod0 = new G4PVPlacement(trans_rod0, lvRod, "rod", lvSiLi, 1, 0, checkOverlaps);
-
-    //ok, what the hell, just place it by hand 3 more times, copy&paste FTW!
-    G4Transform3D trans_rod1(rotrod, G4ThreeVector(35*mm,-90*mm,90*mm));
-    pvRod1 = new G4PVPlacement(trans_rod1, lvRod, "rod", lvSiLi, 1, 1, 1);
-    G4Transform3D trans_rod2(rotrod, G4ThreeVector(35*mm,90*mm,-90*mm));
-    pvRod2 = new G4PVPlacement(trans_rod2, lvRod, "rod", lvSiLi, 1, 2, 1);
-    G4Transform3D trans_rod3(rotrod, G4ThreeVector(35*mm,-90*mm,-90*mm));
-    pvRod3 = new G4PVPlacement(trans_rod3, lvRod, "rod", lvSiLi, 1, 3, 1);
-
-
-    
-    //pvSupportStruct = new G4PVPlacement(0, G4ThreeVector(), 
-    //					lvSupportStruct, "SupportStruct", lvSiLi, 1, 0, checkOverlaps);
-
-  } */
-  // JonR: This is where we actually start defining detectors, may want to change how this is done to
-  // allow a more modular approach
-  
-  //pvSiLi = new G4PVPlacement(0, G4ThreeVector(), lvSiLi, "SiLi", lvWorld, 1, 0, checkOverlaps);
-  /*  for (int i=-1; i<6;i++){
-    int j = -i;
-    phi = 45*deg * j;
-    G4RotationMatrix rotWin;
-    rotWin.rotateX(90*deg);
-    rotWin.rotateY(0*deg);
-    rotWin.rotateZ(phi);
-    G4double r1 = 459.805*mm;//SideCanisterDist + SideCanisterThick;
-    x1 = cos(phi)*r1;
-    y1 = sin(phi)*r1;
-    z1 = 0;
-    G4Transform3D transWin(rotWin, G4ThreeVector(x1,y1,z1)); 
-    
-    // The following line places the actual SiLi detectors
-    //pvSiLi = new G4PVPlacement(transWin, lvSiLi, "SiLi", lvWorld, 1, i, checkOverlaps);
-
-    //jonr: The following were commented out before I got here.., will look into eventually.  I'm guessing the one
-    // below is just for the Cu side fittings onto the detector's head
-    //pvSideCanister = new G4PVPlacement(transWin, lvSideCanister, CanisterName, lvWorld, 0, i);
-    // jonr: this one might be for just one detector?  There is no numbering on the 7th parameter so...
-    //pvSiLi = new G4PVPlacement(0, G4ThreeVector(), lvSiLi, "SiLi", lvWorld, 1, 0, checkOverlaps);
-    }*/
 }
 
 
@@ -558,45 +444,39 @@ G4VPhysicalVolume* DetectorConstruction::ConstructAll()
   CleanGeometry();
   
   // world
-  //
+
   G4Box* boxWorld = new G4Box(WorldName, WorldSize, WorldSize, WorldSize);
   lvWorld = new G4LogicalVolume(boxWorld, WorldMater, WorldName);
   pvWorld = new G4PVPlacement(0, G4ThreeVector(), lvWorld, WorldName, 0, 0, 0);
   
-  //ConstructSiLi();
-  //ConstructTrap();
   DetectionSystem8pi* my8pidet = new DetectionSystem8pi();
   //DetectionSystemSiLi* mySiLiDet = new DetectionSystemSiLi();
-  //  G4LogicalVolume* mylvSiLi;
-  //mylvSiLi = mySiLiDet->Build();
+  //ConstructSiLi();
+  // JonR: SiLi's do not work right now, need to refactor code to
+  // be more like the 8pi definition
+  // G4LogicalVolume* mylvSiLi;
+  // mylvSiLi = mySiLiDet->Build();
   my8pidet->Build();
-    //    my8pidet->PlaceDetector(logicWorld, pos8pi, rotate8pi, 0);
+
   ConstructTrap();
-  G4RotationMatrix* rotate8pi = new G4RotationMatrix(45*deg, 0, 0);
-    //G4ThreeVector pos8pi = G4ThreeVector(0, 0, 0);
-  G4double r1 = 459.805*mm;//SideCanisterDist + SideCanisterThick;    
+  // JonR: Outer beryllium window - 1/2 the Ge crystal length as it uses that for the origin
+  G4double r1 = 455.136*mm - (my8pidet->fCrystalLength / 2);
+
 
   for (int i=-1; i<6;i++){
     int j = -i;
     phi = 45*deg * j;
-    G4RotationMatrix rotWin;
-    rotate8pi->rotateX(90*deg);
-    rotate8pi->rotateY(0*deg);
+
+    G4RotationMatrix* rotate8pi = new G4RotationMatrix(0*deg, 0*deg, 0*deg);
+    rotate8pi->rotateX(0*deg);
+    rotate8pi->rotateY(90*deg);
     rotate8pi->rotateZ(phi);
-    //    rotWin.rotateX(90*deg);
-    //rotWin.rotateY(0*deg);
-    //rotWin.rotateZ(phi);
 
     x1 = cos(phi)*r1;
     y1 = sin(phi)*r1;
-    z1 = 0;
-    printf("X1: %f, y1: %f, z1: %f, phi: %f\n", (x1, y1, z1, phi));
-    G4Transform3D transWin(rotWin, G4ThreeVector(x1,y1,z1)); 
+    z1 = 0.0;
+    
     my8pidet->PlaceDetector(lvWorld, G4ThreeVector(x1,y1,z1), rotate8pi, i);
-    //G4int DetectionSystem8pi::PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVector move, G4RotationMatrix* rotate, G4int detectorNumber) {
-    
-    //pvSiLi = new G4PVPlacement(transWin, lvSiLi, "SiLi", lvWorld, 1, i, checkOverlaps);
-    
   }
   
   SetVisualization();

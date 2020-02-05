@@ -43,8 +43,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-HistoManager::HistoManager()
-  : rootFile(0), ntupl(0)
+HistoManager::HistoManager() : rootFile(0), ntupl(0)
 {
 
   // histograms

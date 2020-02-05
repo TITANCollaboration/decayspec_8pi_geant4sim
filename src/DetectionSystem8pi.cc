@@ -72,16 +72,18 @@ G4int DetectionSystem8pi::Build() {
     // Build assembly volumes
     fAssembly = new G4AssemblyVolume();
     fAssemblyGe = new G4AssemblyVolume();
-    fAssemblyInnerBGO = new G4AssemblyVolume();
-    fAssemblyOuterLowerBGO = new G4AssemblyVolume();
-    fAssemblyOuterUpperBGO = new G4AssemblyVolume();
-
+    
+    // JonR: I don't care about the BGO sadly
+    // fAssemblyInnerBGO = new G4AssemblyVolume();
+    // fAssemblyOuterLowerBGO = new G4AssemblyVolume();
+    // fAssemblyOuterUpperBGO = new G4AssemblyVolume();
+    
     DefineMaterials();
-
+    
     AddGermanium();
-
+    
     AddGermaniumDeadLayer();
-
+    
     AddGermaniumCore();
     //Add electrodeMat electrode inside germanium core
 
@@ -94,32 +96,34 @@ G4int DetectionSystem8pi::Build() {
     AddInnerStructureMatLids();
     //Add beryllium window
 
+    // ****************************************
+    // JonR: Parts to drop out when running a simulation when you only care about performance
     AddStructureMatCoolingRod();
-    //Add electrodeMat cooling rod section
 
+    // Add electrodeMat cooling rod section
     AddElectrodeMatCoolingRod();
-    //Add the outer can
 
+    // Add liquid N2 cooling container
+    AddLiquidN2Container();
+
+    // Add structureMat sheath around inner BGO annulus
+    AddCoolingRodCover();
+    // ****************************************
+
+    
+    
     AddBerylliumWindow();
     //Add structureMat cooling rod section
 
     AddOuterStructureMatCan();
     //add structureMat cover around cooling rod
 
-    AddCoolingRodCover();
-    //add structureMat sheath around inner BGO annulus
 
     //   AddStructureMatBGOSheath();
     //add inner BGO annulus around cooling rod
 
     //AddInnerBGOAnnulus();
     //add outer BGO annulus
-
-    //    AddOuterBGOAnnulus();
-    //add liquid N2 cooling container
-
-    AddLiquidN2Container();
-    //add hevimetal collimator & core
 
     // jonr : I don't think we need the following items for the EBIT, they appear to just be a cover after the end of the detector
     // AddHevimetalCollimator();
@@ -132,17 +136,18 @@ G4int DetectionSystem8pi::Build() {
     //Add hevimetal and auxMat plug
 
     return 1;
-}//end ::Build
+}
 
-G4int DetectionSystem8pi::PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVector move, G4RotationMatrix* rotate, G4int detectorNumber) {
+G4int DetectionSystem8pi::PlaceDetector(G4LogicalVolume* expHallLog, G4ThreeVector move, G4RotationMatrix* rotate, G4int detectorNumber)
+{
     //G4int detectorCopyID = 0;
 
     //G4int copyNumber = detectorCopyID + detectorNumber;
 
     fAssemblyGe->MakeImprint(expHallLog, move, rotate, detectorNumber);
-    fAssemblyInnerBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*1));
-    fAssemblyOuterLowerBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*2));
-    fAssemblyOuterUpperBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*3));
+    //   fAssemblyInnerBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*1));
+    // fAssemblyOuterLowerBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*2));
+    // fAssemblyOuterUpperBGO->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*3));
     fAssembly->MakeImprint(expHallLog, move, rotate, detectorNumber+(20*4));
 
     return 1;
@@ -161,9 +166,7 @@ G4ThreeVector DetectionSystem8pi::GetDirectionXYZ(G4double theta, G4double phi) 
 
 //Add the germanium crystal
 G4int DetectionSystem8pi::AddGermanium() {
-    //material
-   // G4Material *Germanium = new G4Material("Germanium", density = 5.323*g/cm3, ncomponents = 1);
-    //G4Material::AddMaterial("Germanium",5.323*g/cm3);
+
     G4Material* material = G4Material::GetMaterial("Germanium");
     if( !material ) {
         G4cout << " ----> Material " << "Germanium" << " not found, cannot build the detector shell! " << G4endl;
