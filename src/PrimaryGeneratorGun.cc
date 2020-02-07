@@ -34,7 +34,7 @@ PrimaryGeneratorGun::PrimaryGeneratorGun(G4ParticleGun* gun) : particleGun(gun)
 
 //  fp= fopen("testfile.txt","w");
 
-    ReadFromFile();
+    ReadFromFile(); //JonR: Switching over to RDecay library to handle all the gamma's
 
     messenger = new ParticleGunMessenger(this);
 }
@@ -165,7 +165,7 @@ void PrimaryGeneratorGun::GeneratePrimaries(G4Event* anEvent)
          //   G4cout << "Got here to set particle..\n";
             particle = gunParticle[i];
             energy = gunEnergy[i] * keV;
-            //jonr : Not sure why this is being handled this way, I don't think you can use isotopes here..
+            //JonR : Not sure why this is being handled this way, I don't think you can use isotopes here..
             particleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle(particle));
             particleGun->SetParticleEnergy(energy);
             // set random position (within ellipsoid cloud)
@@ -188,7 +188,7 @@ void PrimaryGeneratorGun::GeneratePrimaries(G4Event* anEvent)
             G4double py = yPos + (ry * std::sin(phi) * std::sin(theta));
             G4double pz = zPos + (rz * std::cos(theta));
             particleGun->SetParticlePosition(G4ThreeVector(px, py, pz));
-            //fprintf(fp,"%f\t%f\t%f\n",px,py,pz);
+            printf("px: %f,\t py: %f,\t pz: %f\n",px,py,pz);
          //  WRITING POSITIONS OF PARTICLE GUN
 
             G4double cosTheta = -1.0 + 2.0 * G4UniformRand();

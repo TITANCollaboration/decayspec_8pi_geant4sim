@@ -35,7 +35,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   switch(selectedAction)
     {
     case 1:
-      //G4cout  << "! We get a source event!\n";
+        // JonR: Just use this, don't use the gun.. It's easy to specify ions with GPS 
       actionSource->GeneratePrimaries(anEvent);
       break;
     case 2:
