@@ -10,6 +10,8 @@
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "Randomize.hh"
+#include "G4IonTable.hh"
+#include "G4Geantino.hh"
 
 
 #include <iostream>
@@ -68,7 +70,6 @@ void PrimaryGeneratorGun::ReadFromFile()
         G4cout << "Failed to open file " << fileName << G4endl;
         return;
     }
-
     // HEADER FORMAT: number of datasets \n lines per dataset
     G4int nSets;
     inFile >> nSets;
