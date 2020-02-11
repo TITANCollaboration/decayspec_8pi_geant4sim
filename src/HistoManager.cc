@@ -39,12 +39,14 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+#include "HistoMessenger.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HistoManager::HistoManager() {
 	fFileName[0] = "g4out";
 	fFactoryOn = false;
-
+    messenger = new HistoMessenger(this);
 	// Only fill one NTuple at a time. If fStepTrackerBool is true, then fHitTrackerBool should be false, or vise-versa.
 	// There is no need to have the hit NTuple and the step NTuple.
 	fHitTrackerBool = true;

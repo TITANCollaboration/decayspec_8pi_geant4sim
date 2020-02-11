@@ -40,6 +40,8 @@
 
 #include "G4SystemOfUnits.hh" // new version geant4.10 requires units
 
+class HistoMessenger;
+
 const G4int MAXNTCOL            = 15;
 
 ///////////////////////////////////////////////////
@@ -77,6 +79,7 @@ private:
 
     G4bool fStepTrackerBool;
     G4bool fHitTrackerBool;
+    HistoMessenger* messenger;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
