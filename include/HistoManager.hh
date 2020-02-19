@@ -63,7 +63,8 @@ public:
     void FillStepNtuple(G4int eventNumber, G4int trackID, G4int parentID, G4int stepNumber, G4int particleType, G4int processType, G4int systemID, G4int cryNumber, G4int detNumber, G4double depEnergy, G4double posx, G4double posy, G4double posz, G4double time, G4int targetZ);
 
     void PrintStatistic();
-
+    void setMyFileName(G4String myFileName);
+    
     G4bool GetStepTrackerBool() { return fStepTrackerBool;};
     G4bool GetHitTrackerBool()  { return fHitTrackerBool;};
 
@@ -72,6 +73,7 @@ private:
 
     G4bool        fFactoryOn;
     G4String      fFileName[2];
+    G4String      fNewFileName = "g4out";
 
     G4int         fNtColId[MAXNTCOL];
     G4int         fNtColIdHit[MAXNTCOL];

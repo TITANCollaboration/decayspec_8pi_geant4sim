@@ -8,8 +8,8 @@
 class HistoManager;
 class G4UIdirectory;
 class G4UIcmdWithADoubleAndUnit;
-class G4UIcmdWithAString;
 class G4UIcmdWithABool;
+class G4UIcmdWithAString;
 
 class HistoMessenger : public G4UImessenger
 {
@@ -20,8 +20,9 @@ public:
   void SetNewValue(G4UIcommand*, G4String);
     
 private:
-    
-    G4UIdirectory*             Dir;
+    HistoManager* hist;
+    G4UIdirectory* Dir;
+    G4UIcmdWithAString* FileNameCmd;
     /*  G4UIcmdWithAnInteger*      atomicNumberCmd;
   G4UIcmdWithAString*        elementNameCmd;
   G4UIcmdWithAString*        spinStateCmd;

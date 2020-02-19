@@ -4,8 +4,7 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAnInteger.hh"
 
-EventMessenger::EventMessenger(EventAction* EvAct)
- :eventAction(EvAct)
+EventMessenger::EventMessenger(EventAction* EvAct) : eventAction(EvAct)
 {   
   Dir = new G4UIdirectory("/ebit/");
   Dir->SetGuidance("this example");

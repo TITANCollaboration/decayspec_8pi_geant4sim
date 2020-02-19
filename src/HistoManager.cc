@@ -44,9 +44,9 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HistoManager::HistoManager() {
-	fFileName[0] = "g4out";
 	fFactoryOn = false;
     messenger = new HistoMessenger(this);
+
 	// Only fill one NTuple at a time. If fStepTrackerBool is true, then fHitTrackerBool should be false, or vise-versa.
 	// There is no need to have the hit NTuple and the step NTuple.
 	fHitTrackerBool = true;
@@ -74,11 +74,17 @@ void HistoManager::Book() {
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 	analysisManager->SetVerboseLevel(0);
 	G4String extension = analysisManager->GetFileType();
-	fFileName[1] = fFileName[0] + "." + extension; // creating root output file in build folder
-
+    /*    if(fNewFileName) {
+        printf("We have a filename!!\n");
+    } else {
+        printf("NOT FILENAME!!!\n");
+        }*/
+    
+    fFileName[1] = fNewFileName + "." + extension; // creating root output file in build folder
+        
 	// Create directories
 	// Open an output file
-	G4bool fileOpen = analysisManager->OpenFile(fFileName[0]); 
+	G4bool fileOpen = analysisManager->OpenFile(fFileName[1]); 
 	if(!fileOpen) {
 		G4cout<<"---> HistoManager::book(): cannot open "<<fFileName[1]<<G4endl;
 		return;
@@ -193,6 +199,11 @@ void HistoManager::FillStepNtuple(G4int eventNumber, G4int trackID, G4int parent
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void HistoManager::setMyFileName(G4String myFileName) {
+    fNewFileName = myFileName;
+}
+
 
 void HistoManager::PrintStatistic() {
 }
