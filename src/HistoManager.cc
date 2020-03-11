@@ -28,9 +28,9 @@
 //
 //
 // $Id: HistoManager.cc 74272 2013-10-02 14:48:50Z gcosmo $
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // This file was originally written written for the GRIFFIN experiment and
 // is now being taken and modified for the EBIT DecaySpec experiement by Jon Ringuette
 // Feb 5th 2020
@@ -79,12 +79,12 @@ void HistoManager::Book() {
     } else {
         printf("NOT FILENAME!!!\n");
         }*/
-    
+
     fFileName[1] = fNewFileName + "." + extension; // creating root output file in build folder
-        
+
 	// Create directories
 	// Open an output file
-	G4bool fileOpen = analysisManager->OpenFile(fFileName[1]); 
+	G4bool fileOpen = analysisManager->OpenFile(fFileName[1]);
 	if(!fileOpen) {
 		G4cout<<"---> HistoManager::book(): cannot open "<<fFileName[1]<<G4endl;
 		return;
@@ -93,8 +93,8 @@ void HistoManager::Book() {
 	///////////////////////////////////////////////////////////////////
 	// Create 1 ntuple
 	if(fHitTrackerBool) {
-        printf("Hit Tracker\n");
-		analysisManager->CreateNtuple("ntuple", "HitTracker");
+        printf("EVENT_NTUPLE\n");
+		analysisManager->CreateNtuple("EVENT_NTUPLE", "NTuple of events");
 		fNtColIdHit[0] = analysisManager->CreateNtupleIColumn("eventNumber");
 		fNtColIdHit[1] = analysisManager->CreateNtupleIColumn("trackID");
 		fNtColIdHit[2] = analysisManager->CreateNtupleIColumn("parentID");
@@ -103,15 +103,15 @@ void HistoManager::Book() {
 		fNtColIdHit[5] = analysisManager->CreateNtupleIColumn("processType");
 		fNtColIdHit[6] = analysisManager->CreateNtupleIColumn("systemID");
 		fNtColIdHit[7] = analysisManager->CreateNtupleIColumn("cryNumber");
-		fNtColIdHit[8] = analysisManager->CreateNtupleIColumn("detNumber");
-		fNtColIdHit[9] = analysisManager->CreateNtupleDColumn("depEnergy");
+		fNtColIdHit[8] = analysisManager->CreateNtupleIColumn("chan");
+		fNtColIdHit[9] = analysisManager->CreateNtupleDColumn("pulse_height");
 		fNtColIdHit[10] = analysisManager->CreateNtupleDColumn("posx");
 		fNtColIdHit[11] = analysisManager->CreateNtupleDColumn("posy");
 		fNtColIdHit[12] = analysisManager->CreateNtupleDColumn("posz");
-		fNtColIdHit[13] = analysisManager->CreateNtupleDColumn("time");
+		fNtColIdHit[13] = analysisManager->CreateNtupleDColumn("timestamp");
 		fNtColIdHit[14] = analysisManager->CreateNtupleIColumn("targetZ");
 		analysisManager->FinishNtuple();
-		G4cout<<"created ntuple HitTracker"<<G4endl;
+		G4cout<<"created ntuple EVENT_NTUPLE"<<G4endl;
 	}
 
 
@@ -137,7 +137,7 @@ void HistoManager::Book() {
 	}
 
 	fFactoryOn = true;
-	G4cout<<"----> Histogram Tree is opened in "<<fFileName[1]<<G4endl;
+	G4cout<<"----> Histogram NTUPLE is opened in "<<fFileName[1]<<G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
